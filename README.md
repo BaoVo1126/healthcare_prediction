@@ -86,20 +86,38 @@ Phân loại kiểu biến dữ liệu:
 
 - Biến mục tiêu (Target - Y): Test Results (Gồm 3 nhóm nhãn phân loại đa lớp: Normal, Abnormal, Inconclusive).
 
+
+
 ## 2. Feature Distributions & Insights:
 - Insight về Biến mục tiêu (Test Results):
-Tỷ lệ phân bổ giữa 3 nhãn Normal, Abnormal, và Inconclusive gần như là cân bằng tuyệt đối (~33.3% cho mỗi nhãn). Dữ liệu hoàn toàn không bị hiện tượng lệch nhãn (Imbalanced Data), điều này giúp quá trình huấn luyện không cần áp dụng SMOTE hay Class Weights.
++ Tỷ lệ phân bổ giữa 3 nhãn Normal, Abnormal, và Inconclusive gần như là cân bằng tuyệt đối (~33.3% cho mỗi nhãn). Dữ liệu hoàn toàn không bị hiện tượng lệch nhãn (Imbalanced Data), điều này giúp quá trình huấn luyện không cần áp dụng SMOTE hay Class Weights.
 
 - Insight về Nhân khẩu học & Bệnh lý:
 
-Độ tuổi (Age): Trải đều tuyến tính từ 18 đến 85 tuổi. Không có sự tập trung đặc biệt vào nhóm tuổi già hay tuổi trẻ.
++ Độ tuổi (Age): Trải đều tuyến tính từ 18 đến 85 tuổi. Không có sự tập trung đặc biệt vào nhóm tuổi già hay tuổi trẻ.
 
-Giới tính (Gender): Tỷ lệ Nam (Male) và Nữ (Female) tiệm cận mức 50:50.
++ Giới tính (Gender): Tỷ lệ Nam (Male) và Nữ (Female) tiệm cận mức 50:50.
 
-Bệnh lý (Medical Condition): Chia đều cho 6 loại bệnh nền chính gồm Cancer (Ung thư), Obesity (Béo phì), Diabetes (Tiểu đường), Asthma (Hen suyễn), Hypertension (Cao huyết áp), và Arthritis (Viêm khớp).
++ Bệnh lý (Medical Condition): Chia đều cho 6 loại bệnh nền chính gồm Cancer (Ung thư), Obesity (Béo phì), Diabetes (Tiểu đường), Asthma (Hen suyễn), Hypertension (Cao huyết áp), và Arthritis (Viêm khớp).
 
 - Insight về Tài chính & Vận hành:
 
-Viện phí (Billing Amount): Dao động ngẫu nhiên rất rộng từ khoảng vài trăm USD cho tới tối đa xấp xỉ 50,000 USD. Số tiền này phân bố đều và hoàn toàn không phụ thuộc vào mức độ nghiêm trọng của bệnh lý hay loại phòng bệnh.
++ Viện phí (Billing Amount): Dao động ngẫu nhiên rất rộng từ khoảng vài trăm USD cho tới tối đa xấp xỉ 50,000 USD. Số tiền này phân bố đều và hoàn toàn không phụ thuộc vào mức độ nghiêm trọng của bệnh lý hay loại phòng bệnh.
 
-Thời gian nằm viện (Length of Stay - Kỹ nghệ đặc trưng): Khi lấy Discharge Date trừ đi Date of Admission, thời gian lưu trú tại bệnh viện dao động ngẫu nhiên từ 1 ngày cho đến khoảng 30 ngày.
++ Thời gian nằm viện (Length of Stay - Feature Engineering): Khi lấy Discharge Date trừ đi Date of Admission, thời gian lưu trú tại bệnh viện dao động ngẫu nhiên từ 1 ngày cho đến khoảng 30 ngày.
+
+
+## 3. Analyze Outliers & Data Health Check:
+- Dữ liệu thiếu (Missing Values): 0%. Toàn bộ 10,000 dòng dữ liệu đều được điền đầy đủ ở tất cả các cột, không xuất hiện giá trị NaN hoặc Null. Do đó, pipeline không cần sử dụng các kỹ thuật điền khuyết như SimpleImputer.
+
+- Dữ liệu trùng lặp (Duplicate Rows): 0%. Không có dòng dữ liệu nào bị lặp lại hoàn toàn.
+
+- Đánh giá Outliers (Giá trị ngoại lai):
+
++ Outliers về mặt sinh học/vận hành: Không có giá trị ngoại lai vô lý. Ví dụ: cột Age không có ai lớn hơn 100 tuổi hay nhỏ hơn 0 tuổi; cột Room Number nằm ổn định trong khoảng các số phòng thông thường.
+
++ Outliers về toán học (Statistical Outliers): Xét trên cột số thực duy nhất là Billing Amount, vì dữ liệu phân bố đều (Uniform) từ mức thấp đến mức kịch trần ~50,000 USD nên khi vẽ biểu đồ Boxplot, chúng ta sẽ không thấy xuất hiện các chấm điểm Outliers nằm cô lập hẳn ra ngoài hàng ranh định biên toán học.
+
++ Tuy nhiên, vì khoảng giá trị của Billing Amount biến thiên quá lớn (hàng chục nghìn) so với các cột số như Age (vài chục), nó sẽ tạo ra độ lệch phân phối lớn nếu đưa trực tiếp vào các mô hình tuyến tính (như Logistic Regression). Đây là lý do vì sao bước xử lý StandardScaler là bắt buộc để ép dữ liệu về phân phối chuẩn (Mean = 0, Std = 1).
+
+
