@@ -11,11 +11,12 @@ Dự án nghiên cứu và xây dựng pipeline tự động tiền xử lý d�
 ---
 
 ## 📁 Cấu trúc thư mục (Project Structure)
+
+```text
 healthcare-analysis-ai/
 │
 ├── data/                       # Chứa dữ liệu (Nếu file quá nặng thì để file raw ở đây)
-│   └── 
-healthcare_dataset.csv
+│   └── healthcare_dataset.csv
 │
 ├── src/                        # Chứa các file mã nguồn Python (.py) tái sử dụng
 │   ├── __init__.py
@@ -24,18 +25,13 @@ healthcare_dataset.csv
 │
 ├── models/                     # Chứa các mô hình đã đóng băng (Artifacts)
 │   ├── best_model_random_forest.pkl
-│   ├── decision_tree.pkl
-│   └── 
+│   └── decision_tree.pkl
 │
 ├── notebooks/                  # Chứa các file Jupyter Notebook thử nghiệm
 │   ├── 01_eda.ipynb            # File phân tích dữ liệu ban đầu
 │   └── 02_training.ipynb       # File gọi class để train và vẽ curve
 │
-├── app.py                      # File chạy giao diện Streamlit (Nếu có deploy)
-├── requirements.txt            # Danh sách các thư viện cần cài đặt
-└── README.md                   # File hướng dẫn và báo cáo dự án (Quan trọng nhất)
-
----
+└── app.py                      # File chạy giao diện Streamlit (Nếu có deploy)
 
 ## 📊 Kết quả thực nghiệm & Phân tích chuyên sâu (Evaluation & Analysis)
 
