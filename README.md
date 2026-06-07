@@ -5,17 +5,24 @@ Dataset: https://www.kaggle.com/code/likhithagudimetla/healthcare-dataset
 ---
 # 📋 Table of Contents
 ---
-1. Introduction
-2. Project of Structure
-3. Data Description, Metadata & Data quality check
-4. Evaluate Metrics & Analyze 
-5. Snippets
-
+1. 🤖 [Introduction](#1-🤖-introduction)
+2. ⚙️ [Tech Stack](#-tech-stack)
+3. 🔋 [Features](#-features)
+4. 📁 [Project Structure](#-2-cấu-trúc-thư-mục-project-structure)
+5. 📊 [Data Description & Benchmarking](#-3-data-description-metadata--data-quality-check)
+6. 💻 [Snippets (Quick Start)](#-5-code-snippets--usage-guide)
+7. 🚀 [Installation & Usage](#-6-hướng-dẫn-cài-đặt--chạy-dự-án-installation--usage)
 
 
 --- 
 # 1.🤖 Introduction
 Dự án nghiên cứu và xây dựng pipeline tự động tiền xử lý dữ liệu, huấn luyện và đánh giá hiệu năng của nhiều mô hình Machine Learning (`Logistic Regression`, `Decision Tree`, `Random Forest`, `Gradient Boosting`, `XGBoost`, `LightGBM`) trên bộ dữ liệu y tế.
+
+## ⚙️ Tech Stack
+- **Language:** Python
+- **Libraries:** Pandas, NumPy, Scikit-Learn, XGBoost, LightGBM
+- **Visuals:** Matplotlib, Seaborn
+- **Deployment:** Streamlit
 
 ## 🚀 Tính năng cốt lõi (Core Features)
 - **Automated Data Engineering**: Một pipeline `AutoPreprocessor` thông minh tự động hóa toàn bộ quy trình từ làm sạch dữ liệu, xử lý giá trị thiếu đến chuẩn hóa (Scaling) cho 10,000 hồ sơ.
