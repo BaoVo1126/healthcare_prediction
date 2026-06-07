@@ -14,7 +14,8 @@ Dự án nghiên cứu và xây dựng pipeline tự động tiền xử lý d�
 healthcare-analysis-ai/
 │
 ├── data/                       # Chứa dữ liệu (Nếu file quá nặng thì để file raw ở đây)
-│   └── healthcare_dataset.csv
+│   └── 
+healthcare_dataset.csv
 │
 ├── src/                        # Chứa các file mã nguồn Python (.py) tái sử dụng
 │   ├── __init__.py
