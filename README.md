@@ -24,7 +24,7 @@ healthcare-analysis-ai/
 ├── models/                     # Chứa các mô hình đã đóng băng (Artifacts)
 │   ├── best_model_random_forest.pkl
 │   ├── decision_tree.pkl
-│   └── ...
+│   └── 
 │
 ├── notebooks/                  # Chứa các file Jupyter Notebook thử nghiệm
 │   ├── 01_eda.ipynb            # File phân tích dữ liệu ban đầu
