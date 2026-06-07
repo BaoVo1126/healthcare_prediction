@@ -52,8 +52,7 @@ healthcare-analysis-ai/
 └── app.py                      # File chạy giao diện Streamlit (Nếu có deploy)
 
 ```
-# 3. DATA DESCRIPTION:
-# 📊 3. DATA DESCRIPTION, METADATA & DATA QUALITY CHECK
+## 📊 3. DATA DESCRIPTION, METADATA & DATA QUALITY CHECK
 
 Dự án này sử dụng bộ dữ liệu gồm **10,000 hồ sơ bệnh án** với **15 thuộc tính gốc**. Qua phân tích, dữ liệu mang bản chất giả lập (Synthetic Data) với các chỉ số phân phối đồng đều.
 
@@ -115,9 +114,9 @@ Số liệu đối chứng giữa hai trường hợp chỉ ra rằng **Accuracy
 
 
 ---
-## 📊 Kết quả thực nghiệm & Phân tích chuyên sâu (Evaluation & Analysis)
+## 📊 4. Kết quả thực nghiệm & Phân tích chuyên sâu (Evaluation & Analysis)
 
-### 4. Final Model Selection Benchmarking
+### 4.1 Final Model Selection Benchmarking
 
 | Model | Train Accuracy | Test Accuracy | F1 Macro | CV Mean ± Std | Time (s) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
@@ -128,14 +127,14 @@ Số liệu đối chứng giữa hai trường hợp chỉ ra rằng **Accuracy
 > 🏆 **Best Model**: `Random Forest` được lựa chọn làm mô hình tối ưu cho sản phẩm nhờ độ ổn định cao và khả năng kiểm soát nhiễu tốt nhất.
 
 ---
-### 5. Phân tích bài toán thực tế (Critical Technical Insights)
+### 4.2 Phân tích bài toán thực tế (Critical Technical Insights)
 * **Vấn đề Underfitting & Pure Noise**: Mặc dù áp dụng các mô hình Boosting mạnh mẽ như `XGBoost` hay `LightGBM`, độ chính xác (*Accuracy*) chỉ dao động quanh mức **35% - 39%** (chỉ nhỉnh hơn mức đoán ngẫu nhiên 3 nhóm ~33.3% một chút).
 * **Nguyên nhân**: Qua phân tích thống kê chuyên sâu (EDA), bộ dữ liệu này là dạng dữ liệu giả lập ngẫu nhiên (*Synthetic Data*). Các đặc trưng sẵn có như `Age`, `Blood Type`, `Admission Type` hoàn toàn độc lập và không có mối tương quan y khoa tuyến tính hay phi tuyến đối với nhãn mục tiêu `Test Results`.
 * **Giải pháp thực tế**: Dự án **không** sử dụng các kỹ thuật tự sinh số liệu giả tạo (*Conditional Feature Generation*) để ép điểm Accuracy lên cao, nhằm đảm bảo tính toàn vẹn dữ liệu (*Data Integrity*). Thay vào đó, dự án tập trung vào việc tối ưu hóa kiến trúc Pipeline code sạch và đưa ra đề xuất thu thập dữ liệu.
 
 ---
 
-## 🛠️ Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
+## 🛠️ 5. Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
 
 ### 1. Cài đặt môi trường
 Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
