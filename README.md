@@ -68,20 +68,38 @@ pip install -r requirements.txt
 ```
 
 
-## I. DATA DESCRIPTION:
-# 1. DATA QUANTITIES & METADATA:
-*Tổng số lượng mẫu: 10,000 dòng dữ liệu đại diện cho 10,000 lượt bệnh nhân nhập viện.
+# I. DATA DESCRIPTION:
+## 1. DATA QUANTITIES & METADATA:
+- Tổng số lượng mẫu: 10,000 dòng dữ liệu đại diện cho 10,000 lượt bệnh nhân nhập viện.
 
-*Số lượng thuộc tính (Features): Có tổng cộng 15 cột thuộc tính gốc.
+- Số lượng thuộc tính (Features): Có tổng cộng 15 cột thuộc tính gốc.
 
 Phân loại kiểu biến dữ liệu:
 
-*Biến định danh (Identifiers): Name, Doctor, Hospital, Room Number (Các biến này mang tính định danh cá nhân hoặc cơ sở, không đóng góp giá trị toán học trực tiếp cho mô hình dự đoán và cần được loại bỏ).
+- Biến định danh (Identifiers): Name, Doctor, Hospital, Room Number (Các biến này mang tính định danh cá nhân hoặc cơ sở, không đóng góp giá trị toán học trực tiếp cho mô hình dự đoán và cần được loại bỏ).
 
-*Biến số học (Numerical): Age (Số nguyên từ 18 đến 85) và Billing Amount (Số thực đại diện cho số tiền viện phí).
+- Biến số học (Numerical): Age (Số nguyên từ 18 đến 85) và Billing Amount (Số thực đại diện cho số tiền viện phí).
 
-*Biến phân loại (Categorical): Gender, Blood Type, Medical Condition, Insurance Provider, Admission Type, Medication.
+- Biến phân loại (Categorical): Gender, Blood Type, Medical Condition, Insurance Provider, Admission Type, Medication.
 
-*Biến thời gian (Datetime): Date of Admission và Discharge Date.
+- Biến thời gian (Datetime): Date of Admission và Discharge Date.
 
-*Biến mục tiêu (Target - Y): Test Results (Gồm 3 nhóm nhãn phân loại đa lớp: Normal, Abnormal, Inconclusive).
+- Biến mục tiêu (Target - Y): Test Results (Gồm 3 nhóm nhãn phân loại đa lớp: Normal, Abnormal, Inconclusive).
+
+## 2. Feature Distributions & Insights:
+- Insight về Biến mục tiêu (Test Results):
+Tỷ lệ phân bổ giữa 3 nhãn Normal, Abnormal, và Inconclusive gần như là cân bằng tuyệt đối (~33.3% cho mỗi nhãn). Dữ liệu hoàn toàn không bị hiện tượng lệch nhãn (Imbalanced Data), điều này giúp quá trình huấn luyện không cần áp dụng SMOTE hay Class Weights.
+
+- Insight về Nhân khẩu học & Bệnh lý:
+
+Độ tuổi (Age): Trải đều tuyến tính từ 18 đến 85 tuổi. Không có sự tập trung đặc biệt vào nhóm tuổi già hay tuổi trẻ.
+
+Giới tính (Gender): Tỷ lệ Nam (Male) và Nữ (Female) tiệm cận mức 50:50.
+
+Bệnh lý (Medical Condition): Chia đều cho 6 loại bệnh nền chính gồm Cancer (Ung thư), Obesity (Béo phì), Diabetes (Tiểu đường), Asthma (Hen suyễn), Hypertension (Cao huyết áp), và Arthritis (Viêm khớp).
+
+- Insight về Tài chính & Vận hành:
+
+Viện phí (Billing Amount): Dao động ngẫu nhiên rất rộng từ khoảng vài trăm USD cho tới tối đa xấp xỉ 50,000 USD. Số tiền này phân bố đều và hoàn toàn không phụ thuộc vào mức độ nghiêm trọng của bệnh lý hay loại phòng bệnh.
+
+Thời gian nằm viện (Length of Stay - Kỹ nghệ đặc trưng): Khi lấy Discharge Date trừ đi Date of Admission, thời gian lưu trú tại bệnh viện dao động ngẫu nhiên từ 1 ngày cho đến khoảng 30 ngày.
