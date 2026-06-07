@@ -7,9 +7,9 @@ Dataset: https://www.kaggle.com/code/likhithagudimetla/healthcare-dataset
 ---
 1. Introduction
 2. Project of Structure
-3. Data Description
-4. Evaluate Metrics
-5. 
+3. Data Description, Metadata & Data quality check
+4. Evaluate Metrics & Analyze 
+5. Snippets
 
 
 
@@ -134,7 +134,34 @@ Số liệu đối chứng giữa hai trường hợp chỉ ra rằng **Accuracy
 
 ---
 
-## 🛠️ 5. Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
+# 💻 5. CODE SNIPPETS & USAGE GUIDE
+
+Dự án được thiết kế theo kiến trúc hướng đối tượng (OOP), cho phép dễ dàng tái sử dụng toàn bộ pipeline tiền xử lý và huấn luyện chỉ với vài dòng code ngắn.
+
+### 🛠️ 5.1. Sử dụng Pipeline Tiền xử lý dữ liệu tự động
+
+Đoạn mã này minh họa cách gọi class `AutoPreprocessor` để tự động làm sạch dữ liệu thô, loại bỏ cột nhiễu hành chính, xử lý viện phí âm và chuẩn hóa dữ liệu theo tỷ lệ 8:1:1:
+
+```python
+from src.preprocessor import AutoPreprocessor
+import pandas as pd
+
+# 1. Nạp bộ dữ liệu thô
+df = pd.read_csv('data/healthcare_dataset.csv')
+
+# 2. Khởi tạo Pipeline (Tự động loại bỏ các biến định danh hành chính)
+prep = AutoPreprocessor(
+    target_col='Test Results', 
+    drop_cols=['Name', 'Doctor', 'Hospital', 'Room Number']
+)
+
+# 3. Thực thi tiền xử lý và chia tách tập dữ liệu (Train/Val/Test)
+X_train, X_val, X_test, y_train, y_val, y_test = prep.fit_transform(df)
+
+print(f"Kích thước tập huấn luyện (Train Set): {X_train.shape}")
+```
+---
+## 🛠️ 6. Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
 
 ### 1. Cài đặt môi trường
 Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
