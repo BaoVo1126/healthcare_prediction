@@ -64,7 +64,7 @@ Dự án này sử dụng bộ dữ liệu gồm **10,000 hồ sơ bệnh án** 
 | **Định danh** *(Loại bỏ)* | `Name`, `Doctor`, `Hospital`, `Room Number` | Object / Int | Mang tính hành chính ➔ **Loại bỏ khi huấn luyện** để bảo mật danh tính và tránh nhiễu. |
 | **Phân loại** *(Categorical)* | `Gender`, `Blood Type`, `Insurance Provider`, `Admission Type`, `Medication` | Object (String) | Đặc trưng về thực thể ➔ **Mã hóa (Encoding)** về dạng số. |
 | **Y khoa Cốt lõi** | `Medical Condition` | Object (String) | Chẩn đoán bệnh nền (6 loại bệnh) ➔ **Biến độc lập chính**. |
-| **Thời gian** *(Datetime)* | `Date of Admission`, `Discharge Date` | Datetime | ➔ Trích xuất thành biến xịn: **`Length of Stay` (Số ngày nằm viện)**. |
+| **Thời gian** *(Datetime)* | `Date of Admission`, `Discharge Date` | Datetime | ➔ Biến đổi thành biến quan trọng: **`Length of Stay` (Số ngày nằm viện)**. |
 | **Số học** *(Numerical)* | `Age`, `Billing Amount` | Int / Float | Các chỉ số định lượng ➔ **Chuẩn hóa scale** bằng `StandardScaler`. |
 | **Mục tiêu** *(Target - Y)* | `Test Results` | Object (String) | Kết quả xét nghiệm (3 nhóm nhãn) ➔ **Nhãn đa lớp cần dự đoán**. |
 
@@ -101,7 +101,7 @@ Kết quả phân tích thống kê khám phá (EDA) chứng minh dữ liệu ph
 * **CASE 1:** Huấn luyện trên Dữ liệu gốc (Giữ nguyên toàn bộ Outliers toán học và độ nhiễu).
 * **CASE 2:** Huấn luyện trên Dữ liệu sạch (Đã dùng phương pháp IQR / Capping để làm mịn cột `Billing Amount` và triệt tiêu các dòng nhiễu nặng phi logic).
 
-#### Bảng đối chứng hiệu năng thực nghiệm (Model Benchmarking):
+#### Data Quality Benchmarking
 
 | Thuật toán (Model) | CASE 1: Dữ liệu gốc (Test Accuracy) | CASE 2: Đã lọc Outliers (Test Accuracy) | Độ chênh lệch ($\Delta$ Accuracy) | Nhận định bản chất toán học từ Kỹ sư |
 | :--- | :---: | :---: | :---: | :--- |
@@ -117,8 +117,7 @@ Số liệu đối chứng giữa hai trường hợp chỉ ra rằng **Accuracy
 ---
 ## 📊 Kết quả thực nghiệm & Phân tích chuyên sâu (Evaluation & Analysis)
 
-### 4. Bảng tóm tắt hiệu năng (Model Summary Table)
-Sau khi huấn luyện trên tập dữ liệu `healthcare_dataset.csv`, dưới đây là kết quả thực nghiệm:
+### 4. Final Model Selection Benchmarking
 
 | Model | Train Accuracy | Test Accuracy | F1 Macro | CV Mean ± Std | Time (s) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
