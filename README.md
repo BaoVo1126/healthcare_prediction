@@ -3,10 +3,12 @@
 Dataset: https://www.kaggle.com/code/likhithagudimetla/healthcare-dataset
 
 ---
-# TABLE OF CONTENTS:
+# 📋 Table of Contents
 ---
 1. Introduction
-2. 
+2. Project of Structure
+3. Data Description
+4. 
 
 
 
@@ -97,7 +99,7 @@ Phân loại kiểu biến dữ liệu:
 - Biến mục tiêu (Target - Y): Test Results (Gồm 3 nhóm nhãn phân loại đa lớp: Normal, Abnormal, Inconclusive).
 
 
-
+---
 ## 2. Feature Distributions & Insights:
 - Insight về Biến mục tiêu (Test Results):
 + Tỷ lệ phân bổ giữa 3 nhãn Normal, Abnormal, và Inconclusive gần như là cân bằng tuyệt đối (~33.3% cho mỗi nhãn). Dữ liệu hoàn toàn không bị hiện tượng lệch nhãn (Imbalanced Data), điều này giúp quá trình huấn luyện không cần áp dụng SMOTE hay Class Weights.
@@ -117,7 +119,7 @@ Phân loại kiểu biến dữ liệu:
 + Thời gian nằm viện (Length of Stay - Feature Engineering): Khi lấy Discharge Date trừ đi Date of Admission, thời gian lưu trú tại bệnh viện dao động ngẫu nhiên từ 1 ngày cho đến khoảng 30 ngày.
 
 
-
+---
 ## 3. Analyze Outliers & Data Health Check:
 - Dữ liệu thiếu (Missing Values): 0%. Toàn bộ 10,000 dòng dữ liệu đều được điền đầy đủ ở tất cả các cột, không xuất hiện giá trị NaN hoặc Null. Do đó, pipeline không cần sử dụng các kỹ thuật điền khuyết như SimpleImputer.
 
@@ -132,7 +134,7 @@ Phân loại kiểu biến dữ liệu:
 + Tuy nhiên, vì khoảng giá trị của Billing Amount biến thiên quá lớn (hàng chục nghìn) so với các cột số như Age (vài chục), nó sẽ tạo ra độ lệch phân phối lớn nếu đưa trực tiếp vào các mô hình tuyến tính (như Logistic Regression). Đây là lý do vì sao bước xử lý StandardScaler là bắt buộc để ép dữ liệu về phân phối chuẩn (Mean = 0, Std = 1).
 
 
-
+---
 ## 4.
 
 
