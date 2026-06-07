@@ -67,5 +67,21 @@ cd healthcare-analysis-ai
 pip install -r requirements.txt
 ```
 
-## ABOUT DATA:
-# 1. 
+
+## I. DATA DESCRIPTION:
+# 1. DATA QUANTITIES & METADATA:
+*Tổng số lượng mẫu: 10,000 dòng dữ liệu đại diện cho 10,000 lượt bệnh nhân nhập viện.
+
+*Số lượng thuộc tính (Features): Có tổng cộng 15 cột thuộc tính gốc.
+
+Phân loại kiểu biến dữ liệu:
+
+*Biến định danh (Identifiers): Name, Doctor, Hospital, Room Number (Các biến này mang tính định danh cá nhân hoặc cơ sở, không đóng góp giá trị toán học trực tiếp cho mô hình dự đoán và cần được loại bỏ).
+
+*Biến số học (Numerical): Age (Số nguyên từ 18 đến 85) và Billing Amount (Số thực đại diện cho số tiền viện phí).
+
+*Biến phân loại (Categorical): Gender, Blood Type, Medical Condition, Insurance Provider, Admission Type, Medication.
+
+*Biến thời gian (Datetime): Date of Admission và Discharge Date.
+
+*Biến mục tiêu (Target - Y): Test Results (Gồm 3 nhóm nhãn phân loại đa lớp: Normal, Abnormal, Inconclusive).
