@@ -2,6 +2,16 @@
 
 Dataset: https://www.kaggle.com/code/likhithagudimetla/healthcare-dataset
 
+---
+# TABLE OF CONTENTS:
+---
+1. Introduction
+2. 
+
+
+
+--- 
+
 Dự án nghiên cứu và xây dựng pipeline tự động tiền xử lý dữ liệu, huấn luyện và đánh giá hiệu năng của nhiều mô hình Machine Learning (`Logistic Regression`, `Decision Tree`, `Random Forest`, `Gradient Boosting`, `XGBoost`, `LightGBM`) trên bộ dữ liệu y tế.
 
 ## 🚀 Tính năng cốt lõi (Core Features)
@@ -107,17 +117,22 @@ Phân loại kiểu biến dữ liệu:
 + Thời gian nằm viện (Length of Stay - Feature Engineering): Khi lấy Discharge Date trừ đi Date of Admission, thời gian lưu trú tại bệnh viện dao động ngẫu nhiên từ 1 ngày cho đến khoảng 30 ngày.
 
 
+
 ## 3. Analyze Outliers & Data Health Check:
 - Dữ liệu thiếu (Missing Values): 0%. Toàn bộ 10,000 dòng dữ liệu đều được điền đầy đủ ở tất cả các cột, không xuất hiện giá trị NaN hoặc Null. Do đó, pipeline không cần sử dụng các kỹ thuật điền khuyết như SimpleImputer.
 
 - Dữ liệu trùng lặp (Duplicate Rows): 0%. Không có dòng dữ liệu nào bị lặp lại hoàn toàn.
 
-- Đánh giá Outliers (Giá trị ngoại lai):
+Đánh giá Outliers (Giá trị ngoại lai):
 
 + Outliers về mặt sinh học/vận hành: Không có giá trị ngoại lai vô lý. Ví dụ: cột Age không có ai lớn hơn 100 tuổi hay nhỏ hơn 0 tuổi; cột Room Number nằm ổn định trong khoảng các số phòng thông thường.
 
 + Outliers về toán học (Statistical Outliers): Xét trên cột số thực duy nhất là Billing Amount, vì dữ liệu phân bố đều (Uniform) từ mức thấp đến mức kịch trần ~50,000 USD nên khi vẽ biểu đồ Boxplot, chúng ta sẽ không thấy xuất hiện các chấm điểm Outliers nằm cô lập hẳn ra ngoài hàng ranh định biên toán học.
 
 + Tuy nhiên, vì khoảng giá trị của Billing Amount biến thiên quá lớn (hàng chục nghìn) so với các cột số như Age (vài chục), nó sẽ tạo ra độ lệch phân phối lớn nếu đưa trực tiếp vào các mô hình tuyến tính (như Logistic Regression). Đây là lý do vì sao bước xử lý StandardScaler là bắt buộc để ép dữ liệu về phân phối chuẩn (Mean = 0, Std = 1).
+
+
+
+## 4.
 
 
