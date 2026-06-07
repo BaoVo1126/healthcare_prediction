@@ -13,7 +13,7 @@ Dataset: https://www.kaggle.com/code/likhithagudimetla/healthcare-dataset
 
 
 --- 
-
+# 1.🤖 Introduction
 Dự án nghiên cứu và xây dựng pipeline tự động tiền xử lý dữ liệu, huấn luyện và đánh giá hiệu năng của nhiều mô hình Machine Learning (`Logistic Regression`, `Decision Tree`, `Random Forest`, `Gradient Boosting`, `XGBoost`, `LightGBM`) trên bộ dữ liệu y tế.
 
 ## 🚀 Tính năng cốt lõi (Core Features)
@@ -22,7 +22,7 @@ Dự án nghiên cứu và xây dựng pipeline tự động tiền xử lý d�
 
 ---
 
-## 📁 Cấu trúc thư mục (Project Structure)
+## 📁 2. Cấu trúc thư mục (Project Structure)
 
 ```text
 healthcare-analysis-ai/
@@ -48,21 +48,7 @@ healthcare-analysis-ai/
 └── app.py                      # File chạy giao diện Streamlit (Nếu có deploy)
 
 ```
-
-## 📊 Kết quả thực nghiệm & Phân tích chuyên sâu (Evaluation & Analysis)
-
-### 1. Bảng tóm tắt hiệu năng (Model Summary Table)
-Sau khi huấn luyện trên tập dữ liệu `healthcare_dataset.csv`, dưới đây là kết quả thực nghiệm:
-
-| Model | Train Accuracy | Test Accuracy | F1 Macro | CV Mean ± Std | Time (s) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Random Forest** | 45.2% | **38.4%** | 0.3810 | 0.3750 ± 0.012 | 2.5s |
-| **XGBoost** | 52.1% | 37.1% | 0.3690 | 0.3620 ± 0.015 | 4.1s |
-| **Logistic Regression**| 34.5% | 34.2% | 0.3310 | 0.3390 ± 0.005 | 0.8s |
-
-> 🏆 **Best Model**: `Random Forest` được lựa chọn làm mô hình tối ưu cho sản phẩm nhờ độ ổn định cao và khả năng kiểm soát nhiễu tốt nhất.
-
-### 2. Phân tích bài toán thực tế (Critical Technical Insights)
+### 3. Phân tích bài toán thực tế (Critical Technical Insights)
 * **Vấn đề Underfitting & Pure Noise**: Mặc dù áp dụng các mô hình Boosting mạnh mẽ như `XGBoost` hay `LightGBM`, độ chính xác (*Accuracy*) chỉ dao động quanh mức **35% - 39%** (chỉ nhỉnh hơn mức đoán ngẫu nhiên 3 nhóm ~33.3% một chút).
 * **Nguyên nhân**: Qua phân tích thống kê chuyên sâu (EDA), bộ dữ liệu này là dạng dữ liệu giả lập ngẫu nhiên (*Synthetic Data*). Các đặc trưng sẵn có như `Age`, `Blood Type`, `Admission Type` hoàn toàn độc lập và không có mối tương quan y khoa tuyến tính hay phi tuyến đối với nhãn mục tiêu `Test Results`.
 * **Giải pháp thực tế**: Dự án **không** sử dụng các kỹ thuật tự sinh số liệu giả tạo (*Conditional Feature Generation*) để ép điểm Accuracy lên cao, nhằm đảm bảo tính toàn vẹn dữ liệu (*Data Integrity*). Thay vào đó, dự án tập trung vào việc tối ưu hóa kiến trúc Pipeline code sạch và đưa ra đề xuất thu thập dữ liệu.
@@ -80,7 +66,7 @@ pip install -r requirements.txt
 ```
 
 
-# I. DATA DESCRIPTION:
+# 4 . DATA DESCRIPTION:
 ## 1. DATA QUANTITIES & METADATA:
 - Tổng số lượng mẫu: 10,000 dòng dữ liệu đại diện cho 10,000 lượt bệnh nhân nhập viện.
 
@@ -135,6 +121,17 @@ Phân loại kiểu biến dữ liệu:
 
 
 ---
-## 4.
+## 📊 Kết quả thực nghiệm & Phân tích chuyên sâu (Evaluation & Analysis)
+
+### 4. Bảng tóm tắt hiệu năng (Model Summary Table)
+Sau khi huấn luyện trên tập dữ liệu `healthcare_dataset.csv`, dưới đây là kết quả thực nghiệm:
+
+| Model | Train Accuracy | Test Accuracy | F1 Macro | CV Mean ± Std | Time (s) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Random Forest** | 45.2% | **38.4%** | 0.3810 | 0.3750 ± 0.012 | 2.5s |
+| **XGBoost** | 52.1% | 37.1% | 0.3690 | 0.3620 ± 0.015 | 4.1s |
+| **Logistic Regression**| 34.5% | 34.2% | 0.3310 | 0.3390 ± 0.005 | 0.8s |
+
+> 🏆 **Best Model**: `Random Forest` được lựa chọn làm mô hình tối ưu cho sản phẩm nhờ độ ổn định cao và khả năng kiểm soát nhiễu tốt nhất.
 
 
