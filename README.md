@@ -26,6 +26,8 @@ healthcare-analysis-ai/
 ├── models/                     # Chứa các mô hình đã đóng băng (Artifacts)
 │   ├── best_model_random_forest.pkl
 │   └── decision_tree.pkl
+|   └── logistic_regression.pkl
+|   └── gradient_boosting.pkl
 │
 ├── notebooks/                  # Chứa các file Jupyter Notebook thử nghiệm
 │   ├── 01_eda.ipynb            # File phân tích dữ liệu ban đầu
@@ -63,3 +65,7 @@ Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt 
 git clone [https://github.com/](https://github.com/)[TÊN_GITHUB_CỦA_BẠN]/healthcare-analysis-ai.git
 cd healthcare-analysis-ai
 pip install -r requirements.txt
+```
+
+## ABOUT DATA:
+# 1. 
