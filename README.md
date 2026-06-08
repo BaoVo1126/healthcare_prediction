@@ -83,6 +83,9 @@ Trước khi huấn luyện, dữ liệu được đưa qua bộ lọc DataInspe
 
 - **Bản chất phân phối**: Cả `Age, Billing Amount`, và `Length of Stay` đều có dạng phân phối đều (Uniform Distribution) với độ lệch (Skewness) tiệm cận mức 0. Đây là bằng chứng đanh thép khẳng định bộ dữ liệu mang tính chất giả lập (Synthetic Data), không phải dữ liệu lâm sàng thực tế (vốn luôn bị lệch phải).
 
+<img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
+
+
 ### 🧪 5.3. Kết quả kiểm định chi bình phương (Chi-Square Test)
 Để trả lời câu hỏi: *"Các thuộc tính đầu vào có thực sự liên quan đến kết quả xét nghiệm (Test Results) hay không?"*, ta thực hiện kiểm định với giả thuyết $H_0$ (Thuộc tính và kết quả xét nghiệm độc lập, không có tính nhân quả).
 
@@ -95,6 +98,9 @@ Trước khi huấn luyện, dữ liệu được đưa qua bộ lọc DataInspe
 | **Blood Type** | 14 | 7.63 | **0.9076** | ❌ **Fail to Reject $H_0$** (Độc lập) |
 
 > 🚨 **Insight Y khoa thực tế**: Trong thực tế lâm sàng, một bệnh nhân ung thư nặng phải có phân phối kết quả xét nghiệm khác hoàn toàn với một người khám sức khỏe định kỳ. Việc tất cả các giá trị $p\text{-value}$ đều lớn hơn rất nhiều so với ngưỡng ý nghĩa ($> 0.05$) và hệ số tương quan tuyến tính kịch trần chỉ đạt $0.0065$ là bằng chứng đanh thép chứng minh: **Nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise)** từ quá trình giả lập dữ liệu.
+
+<img width="1053" height="872" alt="image" src="https://github.com/user-attachments/assets/49137af8-44ea-4924-9de2-049512515243" />
+
 
 ---
 
@@ -143,6 +149,9 @@ Mặc dù dữ liệu mang tính ngẫu nhiên, hệ thống vẫn triển khai 
 | **Logistic Regression** | 34.5% | 34.2% | 0.3310 | 0.3390 ± 0.005 | 0.8s |
 
 > 🏆 **Mô hình vô địch (Best Model)**: Mô hình tinh chỉnh tối ưu lưu trữ tại file `best_model_random_forest.pkl` được lựa chọn để đóng gói nhờ khả năng kiểm soát nhiễu tốt nhất, biên độ Overfitting thấp và duy trì độ ổn định cao qua các vòng Cross-Validation. Dự án nghiêm túc **không** sử dụng các kỹ thuật tự sinh số liệu giả tạo để cố tình "ép điểm" Accuracy lên cao, nhằm đảm bảo tuyệt đối tính toàn vẹn dữ liệu (*Data Integrity*).
+
+<img width="1239" height="444" alt="image" src="https://github.com/user-attachments/assets/5daa5c1d-d587-46ae-847b-141be83bddf0" />
+
 
 ---
 
