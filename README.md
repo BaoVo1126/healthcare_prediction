@@ -48,7 +48,7 @@ healthcare_ml/
 ---
 
 ## 📊 4. Data Quality Diagnosis & Hypothesis Testing
-Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hiện cốt lõi sau:
+Quét dữ liệu thô qua bộ lọc `DataInspector` thu được các phát hiện cốt lõi đặc trưng sau:
 
 - **Xử lý đặc trưng**: Loại bỏ các biến hành chính nhiễu (Name, Doctor, Hospital, Room Number). Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
 
