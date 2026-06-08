@@ -50,13 +50,13 @@ healthcare_ml/
 ## 📊 4. Data Quality Diagnosis & Hypothesis Testing
 Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hiện cốt lõi sau:
 
-- Xử lý đặc trưng: Loại bỏ các biến hành chính nhiễu (Name, Doctor, Hospital, Room Number). Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
+- **Xử lý đặc trưng**: Loại bỏ các biến hành chính nhiễu (Name, Doctor, Hospital, Room Number). Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
 
-- Bất thường dữ liệu: Toán học Boxplot báo 0 dòng ngoại lai vì viện phí (Billing Amount) tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (Xử lý bằng clip(lower=0)) và 534 dòng trùng lặp tuyệt đối (Xử lý bằng drop_duplicates).
+- **Bất thường dữ liệu**: Toán học Boxplot báo 0 dòng ngoại lai vì viện phí (Billing Amount) tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (Xử lý bằng `clip(lower=0)`) và 534 dòng trùng lặp tuyệt đối (Xử lý bằng `drop_duplicates`).
 
-- Tính mùa vụ: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
+- **Tính mùa vụ**: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
 
-- Kiểm định Chi bình phương ($\chi^2$): Kiểm định tính độc lập giữa các biến đầu vào với nhãn mục tiêu Test Results đều trả về giá trị $p\text{-value} > 0.05$.
+- **Kiểm định Chi bình phương ($\chi^2$)**: Kiểm định tính độc lập giữa các biến đầu vào với nhãn mục tiêu Test Results đều trả về giá trị $p\text{-value} > 0.05$.
 
 🚨 Insight: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
 
@@ -94,6 +94,15 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 ### 6.3. Tối ưu hóa (Advanced Optimization)
 * **Feature Engineering**: Thêm 6 biến chuyên ngành (`Age_Group`, `Long_Stay`, `Cond_Med_Interact`...) nâng hiệu năng Random Forest lên **43.7%** (+9.2% so với baseline).
 * **Hyperparameter Tuning**: Sử dụng `RandomizedSearchCV` (5-Fold CV) tối ưu `max_depth` và `min_samples_split` để chặn Overfitting.
+
+
+### 6.4. Model Robustness & Stability Analysis
+
+- **Cross-Validation**: Sử dụng 5-Fold CV để đảm bảo mô hình không bị quá phụ thuộc vào phân chia dữ liệu Train/Test ngẫu nhiên.
+
+- **Ensemble Stability**: Cơ chế Bagging của Random Forest giúp giảm thiểu ảnh hưởng của nhiễu (outliers) và làm mịn các quyết định của cây đơn lẻ.
+
+- **Error Analysis**: Mô hình được đánh giá thông qua cả Accuracy và F1-Macro để đảm bảo tính bền vững trên cả các lớp dữ liệu mất cân bằng.
 
 ---
 
