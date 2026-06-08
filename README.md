@@ -6,13 +6,11 @@ Dataset gốc: [Healthcare Dataset (Kaggle)](https://www.kaggle.com/code/likhith
 ## 📋 Table of Contents
 1. 🤖 [Introduction](#-1-introduction)
 2. ⚙️ [Tech Stack](#-2-tech-stack)
-3. 🔋 [Features](#-3-tính-năng-cốt-lõi-core-features)
-4. 📁 [Project Structure](#-4-cấu-trúc-thư-mục-project-structure)
-5. 📊 [Data Quality Diagnosis & Hypothesis Testing](#-5-data-quality-diagnosis--hypothesis-testing)
-6. 🧪 [Experimental Results: CASE 1 vs CASE 2](#-6-experimental-results-case-1-vs-case-2)
-7. 🚀 [Advanced Improvements & Model Tuning](#-7-advanced-improvements--model-tuning)
-8. 💻 [Snippets (Quick Start)](#-8-code-snippets--usage-guide)
-9. 🚀 [Installation & Usage](#-9-hướng-dẫn-cài-đặt--chạy-dự-án-installation--usage)
+3. 📁 [Project Structure](#-3-project-structure)
+4. 📊 [Data Diagnosis & Hypothesis Testing](#-4-data-diagnosis--hypothesis-testing)
+5. 🧪 [Experimental Results: CASE 1 vs CASE 2](#-5-experimental-results-case-1-vs-case-2)
+6. 🚀 [Model Operational Architecture & Tuning](#-6-model-operational-architecture--tuning)
+7. 💻 [Usage Guide](#-7-usage-guide)
 
 ---
 
@@ -22,23 +20,12 @@ Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) n
 ---
 
 ## ⚙️ 2. Tech Stack
-- **Language:** Python
-- **Libraries:** Pandas, NumPy, SciPy, Scikit-Learn, XGBoost, LightGBM
-- **Visuals:** Matplotlib, Seaborn
-- **Deployment:** Streamlit
+- **Language & Framework:** Python, Streamlit
+- **Libraries:** Sckit-Learn, XGBoost, LightGBM, SciPy, Pandas, NumPy, Seaborn
 
 ---
 
-## 🔋 3. Tính năng cốt lõi (Core Features)
-- 💪 **Automated Data Engineering**: Một pipeline `AutoPreprocessor` thông minh tự động hóa toàn bộ quy trình từ làm sạch dữ liệu, xử lý giá trị thiếu đến chuẩn hóa (Scaling) theo tỷ lệ nghiêm ngặt **80/10/10** giúp triệt tiêu hoàn toàn lỗi rò rỉ dữ liệu (*Data Leakage*).
-- 💪 **Predictive Intelligence**: Triển khai kiến trúc Ensemble với **Random Forest** và **Decision Tree**, cho phép phân tích so sánh để đạt được độ tin cậy tối ưu trong chẩn đoán.
-- 💪 **Interactive AI Dashboard**: Giao diện người dùng được xây dựng trên **Streamlit**, cung cấp khả năng dự đoán rủi ro theo thời gian thực dựa trên các chỉ số sinh học.
-- 💪 **Advanced Visual Analytics**: Hệ thống hóa các báo cáo EDA chuyên sâu từ module `Visualizer`, trực quan hóa mối tương quan giữa 15+ thuộc tính y tế để tìm ra các biến quan trọng nhất.
-- 💪 **Scalable Model Persistence**: Quy trình đóng gói mô hình (Serialization) chuyên nghiệp sang định dạng `.pkl`, đảm bảo hệ thống luôn sẵn sàng để triển khai và inference nhanh chóng.
-
----
-
-## 📁 4. Cấu trúc thư mục (Project Structure)
+## 📁 3. Cấu trúc thư mục (Project Structure)
 ```text
 healthcare_ml/
 │
@@ -60,121 +47,62 @@ healthcare_ml/
 ```
 ---
 
-## 📊 5. Data Quality Diagnosis & Hypothesis Testing
-Trước khi huấn luyện, dữ liệu được đưa qua bộ lọc DataInspector để chẩn đoán "sức khỏe" hệ thống dữ liệu thô và cho ra các bằng chứng toán học cực kỳ quan trọng:
+## 📊 4. Data Quality Diagnosis & Hypothesis Testing
+Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hiện cốt lõi sau:
 
-### 📌 5.1. Từ điển dữ liệu & Định hướng xử lý (Data Metadata)
+- Xử lý đặc trưng: Loại bỏ các biến hành chính nhiễu (Name, Doctor, Hospital, Room Number). Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
 
-- **Biến hành chính (Drop)**: `Name, Doctor, Hospital, Room Number` mang tính hành chính, có độ tuần hoàn (cardinality) quá cao ➔ Loại bỏ hoàn toàn để tránh mô hình bị học vẹt và bảo mật thông tin.
+- Bất thường dữ liệu: Toán học Boxplot báo 0 dòng ngoại lai vì viện phí (Billing Amount) tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (Xử lý bằng clip(lower=0)) và 534 dòng trùng lặp tuyệt đối (Xử lý bằng drop_duplicates).
 
-- **Biến phân loại (Categorical)**: `Gender, Blood Type, Admission Type, Medication` ➔ Mã hóa về dạng số bằng LabelEncoder.
+- Tính mùa vụ: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
 
-- **Biến thời gian (Datetime)**: `Date of Admission` và `Discharge Date` ➔ Trích xuất thành biến phái sinh: Length of Stay (Số ngày nằm viện).
+- Kiểm định Chi bình phương ($\chi^2$): Kiểm định tính độc lập giữa các biến đầu vào với nhãn mục tiêu Test Results đều trả về giá trị $p\text{-value} > 0.05$.
 
-- **Biến số học (Numerical)**: `Age, Billing Amount` ➔ Chuẩn hóa bằng StandardScaler.
-
-- **Biến mục tiêu (Target)**: `Test Results (Normal / Abnormal / Inconclusive)` ➔ Nhãn đa lớp cần dự đoán. Baseline đoán mò ngẫu nhiên đạt 33.33%.
-
-
-
-### 🔍 5.2. Chẩn đoán bất thường & Phân tích động lực theo mốc thời gian (Timeline & Outlier Analysis)
-* **Nghịch lý Outliers (IQR vs Domain Expert)**: Khi quét cột số thực `Billing Amount` bằng thuật toán Boxplot tiêu chuẩn ($IQR = Q_3 - Q_1$), hệ thống báo về **0 dòng ngoại lai**. Lý do toán học: Dữ liệu tuân theo phân phối đều (Uniform Distribution) từ vài trăm USD đến kịch trần $50,000$ USD, khiến khoảng IQR bị kéo giãn cực rộng và bao phủ toàn bộ dữ liệu. Tuy nhiên, xét dưới góc nhìn **Vận hành lâm sàng (Domain Knowledge)**, một bệnh nhân nhập viện điều trị chỉ **1 ngày** nhưng gánh hóa đơn **$50,000$ USD** là điểm bất thường phi lý (Anomaly). 
-* **Lỗi nhập liệu hệ thống**: Phát hiện **108 giá trị viện phí âm (âm tối đa −$2,008.49$)**. Viện phí không thể âm. Hệ thống sử dụng kỹ thuật `clip(lower=0)` để làm mịn, ép các giá trị lỗi về $0$ nhằm bảo toàn số lượng dòng thay vì xóa bỏ thô bạo.
-* **Khuyết tật trùng lặp**: Phát hiện **534 dòng trùng lặp tuyệt đối (0.96%)** trên cả 15 cột (trùng cả tên, ngày vào, ngày ra, số tiền). Trong y tế thực tế, xác suất này gần như bằng 0. Hệ thống tự động dùng `df.drop_duplicates()` để triệt tiêu các Artefacts này.
-* **Phân tích biến động theo mốc thời gian**: Trích xuất dữ liệu theo chu kỳ 5 năm (2019-2024) cho thấy một sự "bất động" kỳ lạ. Tỷ lệ nhập viện, chi phí hóa đơn và tỷ lệ nhãn mục tiêu (`Test Results`) phẳng lỳ qua từng tháng, không hề có tính **mùa vụ (Seasonality)** hay đột biến dịch bệnh. 
-
-> 🚨 **Bằng chứng đanh thép về Dữ liệu Giả lập (Synthetic Data)**: Việc tất cả các biến số học (`Age`, `Billing Amount`, `Length of Stay`) đều có hệ số lệch (Skewness) tiệm cận mức 0 và dàn phẳng theo phân phối đều là bằng chứng khẳng định đây là bộ dữ liệu tạo bằng máy (ngẫu nhiên hóa cơ học). Trong thực tế, dữ liệu bệnh viện luôn bị lệch phải nặng (người già nằm viện nhiều hơn, số ngày nằm viện thường rất ngắn từ 1-3 ngày và chỉ rất ít ca nặng mới nằm đến 30 ngày).
+🚨 Insight: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
 
-### 🧪 5.3. Kết quả kiểm định chi bình phương (Chi-Square Test)
-Để trả lời câu hỏi: *"Các thuộc tính đầu vào có thực sự liên quan đến kết quả xét nghiệm (Test Results) hay không?"*, ta thực hiện kiểm định với giả thuyết $H_0$ (Thuộc tính và kết quả xét nghiệm độc lập, không có tính nhân quả).
+## 🧪 5. Experimental Results: CASE 1 vs CASE 2
+Đối chứng hiệu năng mô hình giữa dữ liệu thô và dữ liệu đã làm sạch để đánh giá tác động của nhiễu dữ liệu.
 
-| Thuộc tính (Feature) | Độ tự do (DoF) | Giá trị thống kê $\chi^2$ | Giá trị $p\text{-value}$ | Kết luận toán học |
-| :--- | :---: | :---: | :---: | :--- |
-| **Medical Condition** | 10 | 13.26 | **0.2098** | ❌ **Fail to Reject $H_0$** (Độc lập) |
-| **Admission Type** | 4 | 1.32 | **0.8580** | ❌ **Fail to Reject $H_0$** (Độc lập) |
-| **Medication** | 8 | 3.73 | **0.8805** | ❌ **Fail to Reject $H_0$** (Độc lập) |
-| **Gender** | 2 | 2.02 | **0.3645** | ❌ **Fail to Reject $H_0$** (Độc lập) |
-| **Blood Type** | 14 | 7.63 | **0.9076** | ❌ **Fail to Reject $H_0$** (Độc lập) |
-
-> 🚨 **Insight Y khoa thực tế**: Trong thực tế lâm sàng, một bệnh nhân ung thư nặng phải có phân phối kết quả xét nghiệm khác hoàn toàn với một người khám sức khỏe định kỳ. Việc tất cả các giá trị $p\text{-value}$ đều lớn hơn rất nhiều so với ngưỡng ý nghĩa ($> 0.05$) và hệ số tương quan tuyến tính kịch trần chỉ đạt $0.0065$ là bằng chứng đanh thép chứng minh: **Nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise)** từ quá trình giả lập dữ liệu.
-
-<img width="1053" height="872" alt="image" src="https://github.com/user-attachments/assets/49137af8-44ea-4924-9de2-049512515243" />
-
-
----
-
-
-## 🧪 6. Experimental Results: CASE 1 vs CASE 2
-
-Để minh chứng tư duy phản biện khoa học trước hội đồng, hệ thống tiến hành thử nghiệm đối chứng nghiêm ngặt giữa hai trường hợp:
-- **CASE 1 (Raw Data)**: Huấn luyện trên dữ liệu thô gốc (Giữ nguyên toàn bộ 534 dòng trùng lặp và 108 giá trị viện phí âm).
-- **CASE 2 (Cleaned Data)**: Huấn luyện trên dữ liệu sạch (Đã loại bỏ hoàn toàn 534 dòng lặp và làm mịn cột viện phí bằng kỹ thuật `clip(lower=0)`).
-
-### Bảng đối chứng hiệu năng thực nghiệm (Data Quality Benchmarking)
-
-| Thuật toán (Model) | CASE 1: Dữ liệu thô (Accuracy / F1 Macro) | CASE 2: Dữ liệu sạch (Accuracy / F1 Macro) | Độ chênh lệch ($\Delta$ Accuracy) |
+| Thuật toán | CASE 1: Thô (Acc/F1) | CASE 2: Sạch (Acc/F1) | Δ Accuracy |
 | :--- | :---: | :---: | :---: |
-| **Logistic Regression** | 33.21% / 0.3271 | 33.64% / 0.3343 | **+ 0.43%** |
-| **Decision Tree** | 33.10% / 0.3196 | 33.11% / 0.3241 | **+ 0.01%** |
-| **Random Forest** | **44.52% / 0.4447** | **43.81% / 0.4379** | **- 0.71%** |
-| **Gradient Boosting** | 32.58% / 0.3230 | 33.07% / 0.3299 | **+ 0.49%** |
+| **Logistic Regression** | 33.2% / 0.33 | 33.6% / 0.33 | +0.4% |
+| **Decision Tree** | 33.1% / 0.32 | 33.1% / 0.32 | 0.0% |
+| **Random Forest** | **44.5% / 0.44** | **43.8% / 0.44** | -0.7% |
+| **Gradient Boosting** | 32.6% / 0.32 | 33.1% / 0.33 | +0.5% |
 
-> 🧐 **Giải mã nghịch lý toán học từ Kỹ sư AI**: 
-> Tại sao thuật toán mạnh như **Random Forest** lại bị sụt giảm $0.71\%$ độ chính xác sau khi ta dọn sạch dữ liệu trùng lặp?
-> Bản chất các dòng trùng lặp khi nằm trong tập dữ liệu huấn luyện (Train Set) sẽ hoạt động như một cơ chế tăng cường dữ liệu ẩn (*Implicit Oversampling*). Mô hình Cây quyết định khi gặp một cấu trúc lặp đi lặp lại nhiều lần trong một tập dữ liệu ngẫu nhiên (nhiễu hoàn toàn) sẽ có xu hướng học vẹt cấu trúc đó để tạo ra các nút lá phân rã giả tạo. Khi ta xóa bỏ trùng lặp, "bức màn" này bị hạ xuống, đưa mô hình về đúng thực tế hỗn loạn của dữ liệu nhiễu.
->
-> **Kết luận**: Hiệu năng biến động không đáng kể ($< 1\%$) chứng minh định luật tối cao của Machine Learning: **"Garbage in, Garbage out"**. Việc làm sạch dữ liệu đơn thuần không thể cứu vãn được mô hình nếu bản thân dữ liệu gốc đã hoàn toàn mất đi tính nhân quả.
+> 🧐 **Insight:** Sự sụt giảm nhẹ của Random Forest sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
 
 ---
 
-## 🚀 7. Advanced Improvements & Model Tuning
+## 🚀 6. Model Operational Architecture & Tuning
 
-Mặc dù dữ liệu mang tính ngẫu nhiên, hệ thống vẫn triển khai đầy đủ các phân hệ cải tiến nâng cao chuyên sâu nhằm minh chứng năng lực thiết kế kiến trúc MLOps:
+### 6.1. Kiến trúc suy luận (Inference Flow)
+* **Pipeline**: `AutoPreprocessor` (Trích xuất đặc trưng ➔ Encoding ➔ Scaling). Lưu ý: `StandardScaler` được *fit* trên tập Train để tránh **Data Leakage**.
+* **Ensemble Strategy**: Sử dụng **Random Forest** (Bagging, 100 estimators) nhờ khả năng kháng nhiễu thông qua cơ chế bỏ phiếu đám đông, giúp ổn định hóa các quyết định sai lệch.
 
-### ⚙️ 7.1. Kiến trúc vận hành của Mô hình (How data flows through the models)
+### 6.2. Benchmarking (Final Selection)
+| Mô hình | Test Accuracy | F1 Macro | Độ ổn định (CV) | Thế mạnh |
+| :--- | :---: | :---: | :---: | :--- |
+| **Logistic Regression** | 34.2% | 0.331 | Cao | Độ trễ thấp (<0.1s) |
+| **XGBoost** | 37.1% | 0.369 | Trung bình | Kiểm soát Loss qua Early Stopping |
+| **Random Forest** | **38.4%** | **0.381** | Cao | **Kháng nhiễu tốt nhất** |
 
-Khi một bản ghi bệnh nhân mới đi vào hệ thống, quy trình trích xuất và tính toán sẽ diễn ra như sau:
-1.  **Giai đoạn Inference**: Dữ liệu thô truyền vào ➔ `AutoPreprocessor` bốc tách `Date` thành số ngày nằm viện (`Length of Stay`) ➔ `LabelEncoder` chuyển văn bản thành số ➔ `StandardScaler` ép giá trị hóa đơn về phân phối chuẩn dựa trên Mean và Std của tập Train gốc.
-2.  **Cơ chế ra quyết định nội bộ**:
-    * **Logistic Regression**: Nhân các đặc trưng với một bộ trọng số tuyến tính ($W$) rồi cộng với hệ số chệch ($b$). Kết quả được đẩy qua hàm **Softmax** để xuất ra xác suất cho 3 lớp nhãn. Do dữ liệu phân bố ngẫu nhiên trộn lẫn vào nhau, mô hình này cố gắng vẽ các đường thẳng cắt ngang không gian nhưng hoàn toàn bất lực (đạt hiệu năng tệ nhất ~34%).
-    * **XGBoost & LightGBM**: Vận hành theo cơ chế **Gradient Boosting**. Hệ thống xây dựng các cây quyết định một cách tuần tự. Cây thứ hai được sinh ra để tối ưu hóa hàm mất mát (Loss function) dựa trên sai số của cây thứ nhất. Cơ chế dừng sớm `early_stopping_rounds=10` trên tập Validation liên tục giám sát hàm loss; khi loss trên tập Val không giảm nữa, mô hình lập tức khóa phanh để chống Overfitting.
-    * **Random Forest (Nhà vô địch)**: Vận hành theo kiến trúc **Bagging (Bootstrap Aggregating)**. Hệ thống trồng song song **100 cây quyết định độc lập**. Mỗi cây chỉ được nhìn một phần dữ liệu dòng (Bootstrap samples) và một phần dữ liệu cột (Feature subsampling) ngẫu nhiên. Khi ra kết quả, 100 cây sẽ tiến hành **bỏ phiếu đám đông (Majority Voting)** để chọn nhãn có số phiếu cao nhất.
+> 🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
 
-
-
-### 7.2. Các kỹ thuật tối ưu hóa nâng cao
-1. **Advanced Feature Engineering (+6 Biến phái sinh)**: Trích xuất các biến mang tính chất tri thức chuyên ngành bao gồm `Age_Group` (Nhóm tuổi), `High_Billing` (Biến cờ hiệu cho hóa đơn kịch trần), `Long_Stay` (Số ngày nằm viện dài hạn), `Is_Weekend`, `Quarter`, và biến tương tác đặc trưng `Cond_Med_Interact`.
-   - *Kết quả*: Giúp Random Forest bám vào các cấu trúc phi tuyến tính nhân tạo, đẩy Accuracy lên **~43.7%** (Tăng mạnh **+9.2%** so với baseline thô ban đầu).
-2. **XGBoost & LightGBM Deployment**: Triển khai các thuật toán Boosting mạnh mẽ, cấu hình tham số giám sát tập Validation (`eval_set=X_val`) kết hợp cơ chế dừng sớm (`early_stopping_rounds`) để giám sát chặt chẽ hàm mất mát qua từng cây nhằm triệt tiêu hiện tượng Overfitting.
-   - *Kết quả*: XGBoost đạt **36.7%**, LightGBM đạt **36.3%** trên tập kiểm thử độc lập.
-3. **Hyperparameter Tuning**: Thực thi quét không gian tham số diện rộng thông qua `RandomizedSearchCV` (20 combinations × 5-Fold Cross-Validation) để tinh chỉnh các tham số `max_depth`, `n_estimators`, và `min_samples_split`.
-
-### 7.3. Bảng Đánh giá Hiệu năng Tổng hợp & Lựa chọn Mô hình (Final Model Selection Benchmarking)
-> **Lưu ý**: Sau khi thử nghiệm diện rộng, dự án trích xuất 3 mô hình đại diện xuất sắc nhất cho 3 kiến trúc thuật toán cốt lõi (Linear, Bagging, Boosting) để tiến hành đánh giá chuyên sâu và bốc ra mô hình tối ưu nhất đưa vào ứng dụng thực tế (`Streamlit`).
-
-| Model | Train Accuracy | Test Accuracy | F1 Macro | CV Mean ± Std | Time (s) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Random Forest** | 45.2% | **38.4%** | 0.3810 | 0.3750 ± 0.012 | 2.5s |
-| **XGBoost** | 52.1% | 37.1% | 0.3690 | 0.3620 ± 0.015 | 4.1s |
-| **Logistic Regression** | 34.5% | 34.2% | 0.3310 | 0.3390 ± 0.005 | 0.8s |
-
-<img width="1238" height="344" alt="image" src="https://github.com/user-attachments/assets/ad237ea0-32b6-4052-b276-4dc900a5aa8c" />
-
-
-> 🏆 **Mô hình vô địch (Best Model)**: Mô hình tinh chỉnh tối ưu lưu trữ tại file `best_model_random_forest.pkl` được lựa chọn để đóng gói nhờ khả năng kiểm soát nhiễu tốt nhất, biên độ Overfitting thấp và duy trì độ ổn định cao qua các vòng Cross-Validation. Dự án nghiêm túc **không** sử dụng các kỹ thuật tự sinh số liệu giả tạo để cố tình "ép điểm" Accuracy lên cao, nhằm đảm bảo tuyệt đối tính toàn vẹn dữ liệu (*Data Integrity*).
-
-<img width="1239" height="444" alt="image" src="https://github.com/user-attachments/assets/5daa5c1d-d587-46ae-847b-141be83bddf0" />
-
+### 6.3. Tối ưu hóa (Advanced Optimization)
+* **Feature Engineering**: Thêm 6 biến chuyên ngành (`Age_Group`, `Long_Stay`, `Cond_Med_Interact`...) nâng hiệu năng Random Forest lên **43.7%** (+9.2% so với baseline).
+* **Hyperparameter Tuning**: Sử dụng `RandomizedSearchCV` (5-Fold CV) tối ưu `max_depth` và `min_samples_split` để chặn Overfitting.
 
 ---
 
-## 💻 8. Code Snippets & Usage Guide
+
+## 💻 7. Code Snippets & Usage Guide
 
 Dự án được thiết kế hoàn toàn theo kiến trúc hướng đối tượng (OOP), đóng gói thành các Class độc lập giúp bạn có thể dễ dàng tái sử dụng toàn bộ pipeline tiền xử lý và huấn luyện chỉ với vài dòng code ngắn.
 
-### 🛠️ 8.1. Sử dụng Pipeline Tiền xử lý dữ liệu tự động
+### 🛠️ 7.1. Sử dụng Pipeline Tiền xử lý dữ liệu tự động
 Đoạn mã mẫu minh họa cách gọi lớp `AutoPreprocessor` để tự động dọn dẹp dữ liệu ngoại lai, triệt tiêu biến nhiễu hành chính và cắt lát dữ liệu theo tỷ lệ nghiêm ngặt **80/10/10**:
 
 ```python
@@ -195,31 +123,12 @@ X_train, X_val, X_test, y_train, y_val, y_test = prep.fit_transform(df)
 
 print(f" Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.shape}")
 ```
-
-### 🧪 8.2. Huấn luyện đa mô hình song song & Đánh giá tổng hợp
-Đoạn mã minh họa cách gọi lớp ModelTrainer để kích hoạt chuỗi huấn luyện các kiến trúc thuật toán, vẽ đường cong học tập Bootstrap và xuất báo cáo hiệu năng:
-```python
-from src.model_trainer import ModelTrainer
-
-# 1. Khởi tạo bộ huấn luyện đa mô hình
-trainer = ModelTrainer()
-
-# 2. Huấn luyện đồng thời các thuật toán kết hợp truyền tập Val để giám sát đường cong học tập
-trainer.fit(X_train, y_train, X_val, y_val, X_test, y_test, run_bootstrap=True)
-
-# 3. Trích xuất bảng báo cáo hiệu năng tổng hợp (Final Benchmarking)
-trainer.summary()
-
-```
-
-
 ---
-## 🛠️ 9. Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
 
-### 1. Cài đặt môi trường
+## 🛠️ 7.2 Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
 Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
 ```bash
-git clone [https://github.com/](https://github.com/)[TÊN_GITHUB_CỦA_BẠN]/healthcare-analysis-ai.git
+git clone [https://github.com/](https://github.com/)[BaoVo1126]/healthcare-analysis-ai.git
 cd healthcare-analysis-ai
 pip install -r requirements.txt
 ```
