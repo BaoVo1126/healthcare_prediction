@@ -15,7 +15,7 @@ Dataset gốc: [Healthcare Dataset (Kaggle)](https://www.kaggle.com/code/likhith
 ---
 
 ## 🤖 1. Introduction
-Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) nhằm tự động hóa quy trình tiền xử lý dữ liệu, kiểm định giả thuyết thống kê, và huấn luyện/đánh giá hiệu năng của nhiều mô hình Machine Learning (`Logistic Regression`, `Decision Tree`, `Random Forest`, `Gradient Boosting`, `XGBoost`, `LightGBM`) trên bộ dữ liệu y tế gồm **55,500 hồ sơ bệnh án**. Dự án tập trung vào việc phản biện tư duy giữa dữ liệu thô và dữ liệu sạch thông qua các kiểm định toán học nghiêm ngặt.
+Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) nhằm tự động hóa quy trình tiền xử lý dữ liệu, kiểm định giả thuyết thống kê, và huấn luyện/đánh giá hiệu năng của nhiều mô hình Machine Learning (`Logistic Regression`, `Decision Tree`, `Random Forest`, `Gradient Boosting`, `XGBoost`, `LightGBM`) trên bộ dữ liệu y tế gồm **55,500 hồ sơ bệnh án**. Xây dựng End-to-End Machine Learning Pipeline, tập trung vào việc chẩn đoán chất lượng dữ liệu chuyên sâu, phát hiện các điểm bất thường (outliers/anomalies) và xây dựng bộ công cụ (toolkit) tái sử dụng để tối ưu hóa quy trình từ xử lý dữ liệu đến huấn luyện mô hình.
 
 ---
 
