@@ -62,6 +62,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
 
+---
 ## 🧪 5. Experimental Results: CASE 1 vs CASE 2
 Đối chứng hiệu năng mô hình giữa dữ liệu thô và dữ liệu đã làm sạch để đánh giá tác động của nhiễu dữ liệu.
 
