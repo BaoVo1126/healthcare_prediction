@@ -65,23 +65,23 @@ Trước khi huấn luyện, dữ liệu được đưa qua bộ lọc DataInspe
 
 ### 📌 5.1. Từ điển dữ liệu & Định hướng xử lý (Data Metadata)
 
-**Biến hành chính (Drop)**: `Name, Doctor, Hospital, Room Number` mang tính hành chính, có độ tuần hoàn (cardinality) quá cao ➔ Loại bỏ hoàn toàn để tránh mô hình bị học vẹt và bảo mật thông tin.
+- **Biến hành chính (Drop)**: `Name, Doctor, Hospital, Room Number` mang tính hành chính, có độ tuần hoàn (cardinality) quá cao ➔ Loại bỏ hoàn toàn để tránh mô hình bị học vẹt và bảo mật thông tin.
 
-**Biến phân loại (Categorical)**: `Gender, Blood Type, Admission Type, Medication` ➔ Mã hóa về dạng số bằng LabelEncoder.
+- **Biến phân loại (Categorical)**: `Gender, Blood Type, Admission Type, Medication` ➔ Mã hóa về dạng số bằng LabelEncoder.
 
-**Biến thời gian (Datetime)**: `Date of Admission` và `Discharge Date` ➔ Trích xuất thành biến phái sinh: Length of Stay (Số ngày nằm viện).
+- **Biến thời gian (Datetime)**: `Date of Admission` và `Discharge Date` ➔ Trích xuất thành biến phái sinh: Length of Stay (Số ngày nằm viện).
 
-**Biến số học (Numerical)**: `Age, Billing Amount` ➔ Chuẩn hóa bằng StandardScaler.
+- **Biến số học (Numerical)**: `Age, Billing Amount` ➔ Chuẩn hóa bằng StandardScaler.
 
-**Biến mục tiêu (Target)**: `Test Results (Normal / Abnormal / Inconclusive)` ➔ Nhãn đa lớp cần dự đoán. Baseline đoán mò ngẫu nhiên đạt 33.33%.
+- **Biến mục tiêu (Target)**: `Test Results (Normal / Abnormal / Inconclusive)` ➔ Nhãn đa lớp cần dự đoán. Baseline đoán mò ngẫu nhiên đạt 33.33%.
 
 ## 🔍 5.2. Chẩn đoán bất thường & Ngoại lai (Anomalies Check)
 
-**Dữ liệu trùng lặp**: Phát hiện 534 dòng trùng lặp tuyệt đối (0.96%). Đây là dấu hiệu của lỗi sao chép dữ liệu (Artefacts) trong quá trình giả lập. Hệ thống tự động dùng df.drop_duplicates() để loại bỏ.
+- **Dữ liệu trùng lặp**: Phát hiện 534 dòng trùng lặp tuyệt đối (0.96%). Đây là dấu hiệu của lỗi sao chép dữ liệu (Artefacts) trong quá trình giả lập. Hệ thống tự động dùng df.drop_duplicates() để loại bỏ.
 
-**Viện phí (Billing Amount)**: Biên độ dao động từ $−2,008.49$ đến $52,764.28$. Xuất hiện 108 giá trị âm phi logic (Lỗi nhập liệu). Hệ thống xử lý bằng kỹ thuật clip(lower=0) để làm mịn thay vì xóa bỏ nhằm bảo toàn số dòng cho tập Train.
+- **Viện phí (Billing Amount)**: Biên độ dao động từ $−2,008.49$ đến $52,764.28$. Xuất hiện 108 giá trị âm phi logic (Lỗi nhập liệu). Hệ thống xử lý bằng kỹ thuật clip(lower=0) để làm mịn thay vì xóa bỏ nhằm bảo toàn số dòng cho tập Train.
 
-**Bản chất phân phối**: Cả `Age, Billing Amount`, và `Length of Stay` đều có dạng phân phối đều (Uniform Distribution) với độ lệch (Skewness) tiệm cận mức 0. Đây là bằng chứng đanh thép khẳng định bộ dữ liệu mang tính chất giả lập (Synthetic Data), không phải dữ liệu lâm sàng thực tế (vốn luôn bị lệch phải).
+- **Bản chất phân phối**: Cả `Age, Billing Amount`, và `Length of Stay` đều có dạng phân phối đều (Uniform Distribution) với độ lệch (Skewness) tiệm cận mức 0. Đây là bằng chứng đanh thép khẳng định bộ dữ liệu mang tính chất giả lập (Synthetic Data), không phải dữ liệu lâm sàng thực tế (vốn luôn bị lệch phải).
 
 ### 🧪 5.3. Kết quả kiểm định chi bình phương (Chi-Square Test)
 Để trả lời câu hỏi: *"Các thuộc tính đầu vào có thực sự liên quan đến kết quả xét nghiệm (Test Results) hay không?"*, ta thực hiện kiểm định với giả thuyết $H_0$ (Thuộc tính và kết quả xét nghiệm độc lập, không có tính nhân quả).
@@ -169,7 +169,7 @@ prep = AutoPreprocessor(
 # 3. Thực thi quy trình tự động và chia tách dữ liệu (Train/Val/Test - 80/10/10)
 X_train, X_val, X_test, y_train, y_val, y_test = prep.fit_transform(df)
 
-print(f"✅ Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.shape}")
+print(f" Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.shape}")
 ```
 
 ### 🧪 8.2. Huấn luyện đa mô hình song song & Đánh giá tổng hợp
