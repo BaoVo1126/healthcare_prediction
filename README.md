@@ -75,16 +75,17 @@ Trước khi huấn luyện, dữ liệu được đưa qua bộ lọc DataInspe
 
 - **Biến mục tiêu (Target)**: `Test Results (Normal / Abnormal / Inconclusive)` ➔ Nhãn đa lớp cần dự đoán. Baseline đoán mò ngẫu nhiên đạt 33.33%.
 
-## 🔍 5.2. Chẩn đoán bất thường & Ngoại lai (Anomalies Check)
 
-- **Dữ liệu trùng lặp**: Phát hiện 534 dòng trùng lặp tuyệt đối (0.96%). Đây là dấu hiệu của lỗi sao chép dữ liệu (Artefacts) trong quá trình giả lập. Hệ thống tự động dùng df.drop_duplicates() để loại bỏ.
 
-- **Viện phí (Billing Amount)**: Biên độ dao động từ $−2,008.49$ đến $52,764.28$. Xuất hiện 108 giá trị âm phi logic (Lỗi nhập liệu). Hệ thống xử lý bằng kỹ thuật clip(lower=0) để làm mịn thay vì xóa bỏ nhằm bảo toàn số dòng cho tập Train.
+### 🔍 5.2. Chẩn đoán bất thường & Phân tích động lực theo mốc thời gian (Timeline & Outlier Analysis)
+* **Nghịch lý Outliers (IQR vs Domain Expert)**: Khi quét cột số thực `Billing Amount` bằng thuật toán Boxplot tiêu chuẩn ($IQR = Q_3 - Q_1$), hệ thống báo về **0 dòng ngoại lai**. Lý do toán học: Dữ liệu tuân theo phân phối đều (Uniform Distribution) từ vài trăm USD đến kịch trần $50,000$ USD, khiến khoảng IQR bị kéo giãn cực rộng và bao phủ toàn bộ dữ liệu. Tuy nhiên, xét dưới góc nhìn **Vận hành lâm sàng (Domain Knowledge)**, một bệnh nhân nhập viện điều trị chỉ **1 ngày** nhưng gánh hóa đơn **$50,000$ USD** là một sự bất thường phi lý (Anomaly). 
+* **Lỗi nhập liệu hệ thống**: Phát hiện **108 giá trị viện phí âm (âm tối đa −$2,008.49$)**. Viện phí không thể âm. Hệ thống sử dụng kỹ thuật `clip(lower=0)` để làm mịn, ép các giá trị lỗi về $0$ nhằm bảo toàn số lượng dòng thay vì xóa bỏ thô bạo.
+* **Khuyết tật trùng lặp**: Phát hiện **534 dòng trùng lặp tuyệt đối (0.96%)** trên cả 15 cột (trùng cả tên, ngày vào, ngày ra, số tiền). Trong y tế thực tế, xác suất này gần như bằng 0. Hệ thống tự động dùng `df.drop_duplicates()` để triệt tiêu các Artefacts này.
+* **Phân tích biến động theo mốc thời gian**: Trích xuất dữ liệu theo chu kỳ 5 năm (2019-2024) cho thấy một sự "bất động" kỳ lạ. Tỷ lệ nhập viện, chi phí hóa đơn và tỷ lệ nhãn mục tiêu (`Test Results`) phẳng lỳ qua từng tháng, không hề có tính **mùa vụ (Seasonality)** hay đột biến dịch bệnh. 
 
-- **Bản chất phân phối**: Cả `Age, Billing Amount`, và `Length of Stay` đều có dạng phân phối đều (Uniform Distribution) với độ lệch (Skewness) tiệm cận mức 0. Đây là bằng chứng đanh thép khẳng định bộ dữ liệu mang tính chất giả lập (Synthetic Data), không phải dữ liệu lâm sàng thực tế (vốn luôn bị lệch phải).
+> 🚨 **Bằng chứng đanh thép về Dữ liệu Giả lập (Synthetic Data)**: Việc tất cả các biến số học (`Age`, `Billing Amount`, `Length of Stay`) đều có hệ số lệch (Skewness) tiệm cận mức 0 và dàn phẳng theo phân phối đều là bằng chứng khẳng định đây là bộ dữ liệu tạo bằng máy (ngẫu nhiên hóa cơ học). Trong thực tế, dữ liệu bệnh viện luôn bị lệch phải nặng (người già nằm viện nhiều hơn, số ngày nằm viện thường rất ngắn từ 1-3 ngày và chỉ rất ít ca nặng mới nằm đến 30 ngày).
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
-
 
 ### 🧪 5.3. Kết quả kiểm định chi bình phương (Chi-Square Test)
 Để trả lời câu hỏi: *"Các thuộc tính đầu vào có thực sự liên quan đến kết quả xét nghiệm (Test Results) hay không?"*, ta thực hiện kiểm định với giả thuyết $H_0$ (Thuộc tính và kết quả xét nghiệm độc lập, không có tính nhân quả).
@@ -132,14 +133,25 @@ Trước khi huấn luyện, dữ liệu được đưa qua bộ lọc DataInspe
 
 Mặc dù dữ liệu mang tính ngẫu nhiên, hệ thống vẫn triển khai đầy đủ các phân hệ cải tiến nâng cao chuyên sâu nhằm minh chứng năng lực thiết kế kiến trúc MLOps:
 
-### 7.1. Các kỹ thuật tối ưu hóa nâng cao
+### ⚙️ 7.1. Kiến trúc vận hành của Mô hình (How data flows through the models)
+
+Khi một bản ghi bệnh nhân mới đi vào hệ thống, quy trình trích xuất và tính toán sẽ diễn ra như sau:
+1.  **Giai đoạn Inference**: Dữ liệu thô truyền vào ➔ `AutoPreprocessor` bốc tách `Date` thành số ngày nằm viện (`Length of Stay`) ➔ `LabelEncoder` chuyển văn bản thành số ➔ `StandardScaler` ép giá trị hóa đơn về phân phối chuẩn dựa trên Mean và Std của tập Train gốc.
+2.  **Cơ chế ra quyết định nội bộ**:
+    * **Logistic Regression**: Nhân các đặc trưng với một bộ trọng số tuyến tính ($W$) rồi cộng với hệ số chệch ($b$). Kết quả được đẩy qua hàm **Softmax** để xuất ra xác suất cho 3 lớp nhãn. Do dữ liệu phân bố ngẫu nhiên trộn lẫn vào nhau, mô hình này cố gắng vẽ các đường thẳng cắt ngang không gian nhưng hoàn toàn bất lực (đạt hiệu năng tệ nhất ~34%).
+    * **XGBoost & LightGBM**: Vận hành theo cơ chế **Gradient Boosting**. Hệ thống xây dựng các cây quyết định một cách tuần tự. Cây thứ hai được sinh ra để tối ưu hóa hàm mất mát (Loss function) dựa trên sai số của cây thứ nhất. Cơ chế dừng sớm `early_stopping_rounds=10` trên tập Validation liên tục giám sát hàm loss; khi loss trên tập Val không giảm nữa, mô hình lập tức khóa phanh để chống Overfitting.
+    * **Random Forest (Nhà vô địch)**: Vận hành theo kiến trúc **Bagging (Bootstrap Aggregating)**. Hệ thống trồng song song **100 cây quyết định độc lập**. Mỗi cây chỉ được nhìn một phần dữ liệu dòng (Bootstrap samples) và một phần dữ liệu cột (Feature subsampling) ngẫu nhiên. Khi ra kết quả, 100 cây sẽ tiến hành **bỏ phiếu đám đông (Majority Voting)** để chọn nhãn có số phiếu cao nhất.
+
+
+
+### 7.2. Các kỹ thuật tối ưu hóa nâng cao
 1. **Advanced Feature Engineering (+6 Biến phái sinh)**: Trích xuất các biến mang tính chất tri thức chuyên ngành bao gồm `Age_Group` (Nhóm tuổi), `High_Billing` (Biến cờ hiệu cho hóa đơn kịch trần), `Long_Stay` (Số ngày nằm viện dài hạn), `Is_Weekend`, `Quarter`, và biến tương tác đặc trưng `Cond_Med_Interact`.
    - *Kết quả*: Giúp Random Forest bám vào các cấu trúc phi tuyến tính nhân tạo, đẩy Accuracy lên **~43.7%** (Tăng mạnh **+9.2%** so với baseline thô ban đầu).
 2. **XGBoost & LightGBM Deployment**: Triển khai các thuật toán Boosting mạnh mẽ, cấu hình tham số giám sát tập Validation (`eval_set=X_val`) kết hợp cơ chế dừng sớm (`early_stopping_rounds`) để giám sát chặt chẽ hàm mất mát qua từng cây nhằm triệt tiêu hiện tượng Overfitting.
    - *Kết quả*: XGBoost đạt **36.7%**, LightGBM đạt **36.3%** trên tập kiểm thử độc lập.
 3. **Hyperparameter Tuning**: Thực thi quét không gian tham số diện rộng thông qua `RandomizedSearchCV` (20 combinations × 5-Fold Cross-Validation) để tinh chỉnh các tham số `max_depth`, `n_estimators`, và `min_samples_split`.
 
-### 7.2. Bảng Đánh giá Hiệu năng Tổng hợp & Lựa chọn Mô hình (Final Model Selection Benchmarking)
+### 7.3. Bảng Đánh giá Hiệu năng Tổng hợp & Lựa chọn Mô hình (Final Model Selection Benchmarking)
 > **Lưu ý**: Sau khi thử nghiệm diện rộng, dự án trích xuất 3 mô hình đại diện xuất sắc nhất cho 3 kiến trúc thuật toán cốt lõi (Linear, Bagging, Boosting) để tiến hành đánh giá chuyên sâu và bốc ra mô hình tối ưu nhất đưa vào ứng dụng thực tế (`Streamlit`).
 
 | Model | Train Accuracy | Test Accuracy | F1 Macro | CV Mean ± Std | Time (s) |
@@ -147,6 +159,9 @@ Mặc dù dữ liệu mang tính ngẫu nhiên, hệ thống vẫn triển khai 
 | **Random Forest** | 45.2% | **38.4%** | 0.3810 | 0.3750 ± 0.012 | 2.5s |
 | **XGBoost** | 52.1% | 37.1% | 0.3690 | 0.3620 ± 0.015 | 4.1s |
 | **Logistic Regression** | 34.5% | 34.2% | 0.3310 | 0.3390 ± 0.005 | 0.8s |
+
+<img width="1238" height="344" alt="image" src="https://github.com/user-attachments/assets/ad237ea0-32b6-4052-b276-4dc900a5aa8c" />
+
 
 > 🏆 **Mô hình vô địch (Best Model)**: Mô hình tinh chỉnh tối ưu lưu trữ tại file `best_model_random_forest.pkl` được lựa chọn để đóng gói nhờ khả năng kiểm soát nhiễu tốt nhất, biên độ Overfitting thấp và duy trì độ ổn định cao qua các vòng Cross-Validation. Dự án nghiêm túc **không** sử dụng các kỹ thuật tự sinh số liệu giả tạo để cố tình "ép điểm" Accuracy lên cao, nhằm đảm bảo tuyệt đối tính toàn vẹn dữ liệu (*Data Integrity*).
 
