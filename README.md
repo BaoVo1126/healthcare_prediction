@@ -96,7 +96,6 @@ Quét dữ liệu thô qua bộ lọc `DataInspector` thu được các phát hi
 * **Feature Engineering**: Thêm 6 biến chuyên ngành (`Age_Group`, `Long_Stay`, `Cond_Med_Interact`...) nâng hiệu năng Random Forest lên **43.7%** (+9.2% so với baseline).
 * **Hyperparameter Tuning**: Sử dụng `RandomizedSearchCV` (5-Fold CV) tối ưu `max_depth` và `min_samples_split` để chặn Overfitting.
 
-
 ### 6.4. Model Robustness & Stability Analysis
 
 - **Cross-Validation**: Sử dụng 5-Fold CV để đảm bảo mô hình không bị quá phụ thuộc vào phân chia dữ liệu Train/Test ngẫu nhiên.
@@ -104,6 +103,21 @@ Quét dữ liệu thô qua bộ lọc `DataInspector` thu được các phát hi
 - **Ensemble Stability**: Cơ chế Bagging của Random Forest giúp giảm thiểu ảnh hưởng của nhiễu (outliers) và làm mịn các quyết định của cây đơn lẻ.
 
 - **Error Analysis**: Mô hình được đánh giá thông qua cả Accuracy và F1-Macro để đảm bảo tính bền vững trên cả các lớp dữ liệu mất cân bằng.
+
+
+### 6.5 Challenges & Future Work
+- **Challenges & Solutions**:
+`Data Quality`: Dữ liệu y tế được xác định có độ nhiễu cao (Pure Noise). Thay vì cố gắng tối ưu hóa chỉ số Accuracy một cách khiên cưỡng, tôi tập trung thiết lập Pipeline Architecture chuẩn mực, đảm bảo tính bền vững và khả năng kiểm soát dữ liệu đầu vào.
+
+`Engineering Mindset`: Xây dựng hệ thống theo hướng Module hóa (Modular) và Tái sử dụng (Reusable), giúp Pipeline có thể tích hợp ngay lập tức vào các dự án thực tế khi có nguồn dữ liệu chất lượng cao hơn.
+
+- **Future Work**:
+
+`Scalability`: Triển khai Pipeline lên hạ tầng Cloud (AWS/GCP) sử dụng Docker/Kubernetes.
+
+`MLOps Integration`: Tích hợp công cụ quản lý thí nghiệm (MLflow/W&B) để theo dõi phiên bản model và so sánh kết quả thực nghiệm khoa học.
+
+`Advanced Modeling`: Thử nghiệm các kiến trúc Deep Learning hoặc Tabular Transformers để khai thác sâu hơn các đặc trưng dữ liệu phức tạp.
 
 ---
 
@@ -138,8 +152,8 @@ print(f" Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.
 ## 🛠️ 7.2 Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
 Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
 ```bash
-git clone [https://github.com/](https://github.com/)[BaoVo1126]/healthcare-analysis-ai.git
-cd healthcare-analysis-ai
+git clone [https://github.com/BaoVo1126/healthcare_prediction.git](https://github.com/BaoVo1126/healthcare_prediction.git)
+cd healthcare_prediction
 pip install -r requirements.txt
 ```
 ---
