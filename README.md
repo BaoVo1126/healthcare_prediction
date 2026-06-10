@@ -106,18 +106,19 @@ Quét dữ liệu thô qua bộ lọc `DataInspector` thu được các phát hi
 
 
 ### 6.5 Challenges & Future Work
-- **Challenges & Solutions**:
-`Data Quality`: Dữ liệu y tế được xác định có độ nhiễu cao (Pure Noise). Thay vì cố gắng tối ưu hóa chỉ số Accuracy một cách khiên cưỡng, tôi tập trung thiết lập Pipeline Architecture chuẩn mực, đảm bảo tính bền vững và khả năng kiểm soát dữ liệu đầu vào.
+ **Challenges & Solutions**:
 
-`Engineering Mindset`: Xây dựng hệ thống theo hướng Module hóa (Modular) và Tái sử dụng (Reusable), giúp Pipeline có thể tích hợp ngay lập tức vào các dự án thực tế khi có nguồn dữ liệu chất lượng cao hơn.
+- `Data Quality`: Dữ liệu y tế được xác định có độ nhiễu cao (Pure Noise). Thay vì cố gắng tối ưu hóa chỉ số Accuracy một cách khiên cưỡng, tôi tập trung thiết lập Pipeline Architecture chuẩn mực, đảm bảo tính bền vững và khả năng kiểm soát dữ liệu đầu vào.
 
-- **Future Work**:
+- `Engineering Mindset`: Xây dựng hệ thống theo hướng Module hóa (Modular) và Tái sử dụng (Reusable), giúp Pipeline có thể tích hợp ngay lập tức vào các dự án thực tế khi có nguồn dữ liệu chất lượng cao hơn.
 
-`Scalability`: Triển khai Pipeline lên hạ tầng Cloud (AWS/GCP) sử dụng Docker/Kubernetes.
+**Future Work**:
 
-`MLOps Integration`: Tích hợp công cụ quản lý thí nghiệm (MLflow/W&B) để theo dõi phiên bản model và so sánh kết quả thực nghiệm khoa học.
+- `Scalability`: Triển khai Pipeline lên hạ tầng Cloud (AWS/GCP) sử dụng Docker/Kubernetes.
 
-`Advanced Modeling`: Thử nghiệm các kiến trúc Deep Learning hoặc Tabular Transformers để khai thác sâu hơn các đặc trưng dữ liệu phức tạp.
+- `MLOps Integration`: Tích hợp công cụ quản lý thí nghiệm (MLflow/W&B) để theo dõi phiên bản model và so sánh kết quả thực nghiệm khoa học.
+
+- `Advanced Modeling`: Thử nghiệm các kiến trúc Deep Learning hoặc Tabular Transformers để khai thác sâu hơn các đặc trưng dữ liệu phức tạp.
 
 ---
 
