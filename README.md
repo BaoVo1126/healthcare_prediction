@@ -64,7 +64,7 @@ Quét dữ liệu thô qua bộ lọc ``DataInspector`` thu được các phát 
 
 - *Tính mùa vụ*: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
 
-- *Kiểm định Chi bình phương ($\chi^2$)*: Kiểm định tính độc lập giữa các biến đầu vào với nhãn mục tiêu Test Results đều trả về giá trị $p\text{-value} > 0.05$.
+- **Kiểm định Chi-square ($\chi$<sub>2</sub>)**: Kiểm định tính độc lập giữa các biến categorical với nhãn mục tiêu `Test Results`. **Tất cả features trả về p-value > 0.05.**
 
 🚨 *Insight*: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
 
