@@ -56,7 +56,7 @@ healthcare_ml/
 ---
 
 ## 📊 4. Data Quality Diagnosis & Hypothesis Testing
-Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hiện cốt lõi đặc trưng sau:
+Quét dữ liệu thô qua bộ lọc ``DataInspector`` thu được các phát hiện cốt lõi đặc trưng sau:
 
 - *Xử lý đặc trưng*: Loại bỏ các biến hành chính nhiễu `(Name, Doctor, Hospital, Room Number)`. Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
 
@@ -92,7 +92,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 ## 🚀 6. Model Operational Architecture & Tuning
 
 ### 6.1. Kiến trúc suy luận (Inference Flow)
-* *Pipeline*: *AutoPreprocessor* (Trích xuất đặc trưng ➔ Encoding ➔ Scaling). Lưu ý: *StandardScaler* được fit trên tập Train để tránh *Data Leakage*.
+* *Pipeline*: AutoPreprocessor (Trích xuất đặc trưng ➔ Encoding ➔ Scaling). Lưu ý: *StandardScaler* được fit trên tập Train để tránh *Data Leakage*.
 * *Ensemble Strategy*: Sử dụng *Random Forest* (Bagging, 100 estimators) nhờ khả năng kháng nhiễu thông qua cơ chế bỏ phiếu đám đông, giúp ổn định hóa các quyết định sai lệch.
 
 ### 6.2. Benchmarking (Final Selection)
@@ -101,6 +101,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 | *Logistic Regression* | 34.2% | 0.331 | Cao | Độ trễ thấp (<0.1s) |
 | *XGBoost* | 37.1% | 0.369 | Trung bình | Kiểm soát Loss qua Early Stopping |
 | *Random Forest* | *38.4%* | *0.381* | Cao | *Kháng nhiễu tốt nhất* |
+
 🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
 
 <img width="620" height="172" alt="image" src="https://github.com/user-attachments/assets/9f78db36-989c-4e01-9d9e-4f48c8ea9a02" />
