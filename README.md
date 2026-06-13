@@ -72,7 +72,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 | *Random Forest* | *44.5% / 0.44* | *43.8% / 0.44* | -0.7% |
 | *Gradient Boosting* | 32.6% / 0.32 | 33.1% / 0.33 | +0.5% |
 
-🧐 **Insight:** Sự sụt giảm nhẹ của Random Forest sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
+🧐 **Insight:** Sự sụt giảm nhẹ của *Random Forest* sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
 
 
 ---
@@ -80,7 +80,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 ## 🚀 6. Model Operational Architecture & Tuning
 
 ### 6.1. Kiến trúc suy luận (Inference Flow)
-* *Pipeline*: AutoPreprocessor (Trích xuất đặc trưng ➔ Encoding ➔ Scaling). Lưu ý: StandardScaler được fit trên tập Train để tránh *Data Leakage*.
+* *Pipeline*: *AutoPreprocessor* (Trích xuất đặc trưng ➔ Encoding ➔ Scaling). Lưu ý: *StandardScaler* được fit trên tập Train để tránh *Data Leakage*.
 * *Ensemble Strategy*: Sử dụng *Random Forest* (Bagging, 100 estimators) nhờ khả năng kháng nhiễu thông qua cơ chế bỏ phiếu đám đông, giúp ổn định hóa các quyết định sai lệch.
 
 ### 6.2. Benchmarking (Final Selection)
@@ -90,11 +90,11 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 | *XGBoost* | 37.1% | 0.369 | Trung bình | Kiểm soát Loss qua Early Stopping |
 | *Random Forest* | *38.4%* | *0.381* | Cao | *Kháng nhiễu tốt nhất* |
 🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
-.
+
 
 ### 6.3. Tối ưu hóa (Advanced Optimization)
 * *Feature Engineering*: Thêm 6 biến chuyên ngành (Age_Group, Long_Stay, Cond_Med_Interact...) nâng hiệu năng Random Forest lên *43.7%* (+9.2% so với baseline).
-* *Hyperparameter Tuning*: Sử dụng RandomizedSearchCV (5-Fold CV) tối ưu max_depth và min_samples_split để chặn Overfitting.
+* *Hyperparameter Tuning*: Sử dụng ``RandomizedSearchCV (5-Fold CV)`` tối ưu max_depth và min_samples_split để chặn Overfitting.
 
 ### 6.4. Model Robustness & Stability Analysis
 
@@ -153,5 +153,5 @@ print(f" Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.
 Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
 ```git clone [https://github.com/BaoVo1126/healthcare_prediction.git](https://github.com/BaoVo1126/healthcare_prediction.git)
 cd healthcare_prediction
-pip install -r requirements.txt```
+pip install -r requirements.txt
 ---
