@@ -11,6 +11,7 @@ Dataset gốc: [Healthcare Dataset (Kaggle)](https://www.kaggle.com/code/likhith
 5. 🧪 [Experimental Results: CASE 1 vs CASE 2](#-5-experimental-results-case-1-vs-case-2)
 6. 🚀 [Model Operational Architecture & Tuning](#-6-model-operational-architecture--tuning)
 7. 💻 [Usage Guide](#-7-usage-guide)
+8. 🏗️ [Production Readiness & Engineering Notes](#-8-production-readiness-vs-engineering-notes)
 
 ---
 
@@ -20,8 +21,13 @@ Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) n
 ---
 
 ## ⚙️ 2. Tech Stack
-- *Language & Framework:* Python, Streamlit
-- *Libraries:* Sckit-Learn, XGBoost, LightGBM, SciPy, Pandas, NumPy, Seaborn
+- *Language*: Python 3.10+
+
+- *Core ML*: Scikit-Learn, XGBoost, LightGBM, SciPy
+
+- *Data Engineering*: Pandas, NumPy
+
+- *QA & Automation*: Pytest, Logging (cấu hình chuẩn tại src/__init__.py)
 
 ---
 
@@ -37,19 +43,21 @@ healthcare_ml/
 │   ├── 02_processing.ipynb     # Pipeline tiền xử lý & Chia tách 80/10/10
 │   └── 03_modeling.ipynb       # Huấn luyện mô hình gốc & Các phân hệ cải thiện
 │
-└── src/                        # Bộ công cụ mã nguồn Python (OOP) tái sử dụng cao
-    ├── __init__.py
-    ├── data_inspector.py       # Công cụ tự động kiểm tra chất lượng dữ liệu
-    ├── visualizer.py           # Tự động hóa vẽ biểu đồ EDA
-    ├── preprocessor.py         # Thực thi quy trình drop → clip → encode → scale
-    └── model_trainer.py        # Bộ huấn luyện đa mô hình & Vẽ Bootstrap curves
+├── src/                        # Bộ công cụ OOP (Reusable Toolkit)
+│   ├── data_inspector.py       # Kiểm định giả thuyết (Chi², MI)
+│   ├── visualizer.py           # Tự động hóa biểu đồ
+│   ├── preprocessor.py         # Pipeline clean/split/encode/scale
+│   └── model_trainer.py        # Huấn luyện đa mô hình & Reporting
+└── test/
+│   ├── test_preprocessor.py
+
 ```
 ---
 
 ## 📊 4. Data Quality Diagnosis & Hypothesis Testing
 Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hiện cốt lõi đặc trưng sau:
 
-- *Xử lý đặc trưng*: Loại bỏ các biến hành chính nhiễu (Name, Doctor, Hospital, Room Number). Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
+- *Xử lý đặc trưng*: Loại bỏ các biến hành chính nhiễu `(Name, Doctor, Hospital, Room Number)`. Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
 
 - *Bất thường dữ liệu*: Toán học Boxplot báo 0 dòng ngoại lai vì viện phí (Billing Amount) tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (Xử lý bằng clip(lower=0)) và 534 dòng trùng lặp tuyệt đối (Xử lý bằng drop_duplicates).
 
@@ -57,9 +65,11 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 - *Kiểm định Chi bình phương ($\chi^2$)*: Kiểm định tính độc lập giữa các biến đầu vào với nhãn mục tiêu Test Results đều trả về giá trị $p\text{-value} > 0.05$.
 
-🚨 Insight: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
+🚨 *Insight*: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
+*Hình 1: Bằng chứng trực quan khẳng định Pure Noise. Bên trái: Toàn bộ p-value từ kiểm định Chi-square độc lập đều > 0.05 (đường nét đứt đỏ). Bên phải: Điểm Mutual Information xấp xỉ 0 trên mọi feature.*
+
 
 ---
 ## 🧪 5. Experimental Results: CASE 1 vs CASE 2
@@ -91,6 +101,8 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 | *Random Forest* | *38.4%* | *0.381* | Cao | *Kháng nhiễu tốt nhất* |
 🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
 
+<img width="617" height="174" alt="image" src="https://github.com/user-attachments/assets/e81f7814-9026-42cb-9d3d-16d8fbe42b8b" />
+*Hình 2: So sánh hiệu năng Test Accuracy, F1-Macro và Validation Accuracy giữa Baseline và các mô hình Refined sau Feature Engineering. Random Forest cho thấy sự cải thiện mạnh nhất nhờ feature interactions.*
 
 ### 6.3. Tối ưu hóa (Advanced Optimization)
 * *Feature Engineering*: Thêm 6 biến chuyên ngành (Age_Group, Long_Stay, Cond_Med_Interact...) nâng hiệu năng Random Forest lên *43.7%* (+9.2% so với baseline).
@@ -104,21 +116,28 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 - *Error Analysis*: Mô hình được đánh giá thông qua cả Accuracy và F1-Macro để đảm bảo tính bền vững trên cả các lớp dữ liệu mất cân bằng.
 
+<img width="617" height="446" alt="image" src="https://github.com/user-attachments/assets/6eb16a93-c6f5-4f8c-a88e-0773157f4361" />
+*Hình 3: Confusion Matrix của Random Forest (Best Model) trên tập Test. Mô hình không bị bias mạnh vào một class nào cụ thể (phân phối normalized recall khá đồng đều), củng cố thêm giả thuyết "đoán ngẫu nhiên" trên dữ liệu Pure Noise.*
+
+<img width="617" height="221" alt="image" src="https://github.com/user-attachments/assets/8a9c004d-8c8d-43c5-b7d8-9ed226473bca" />
+*Hình 4: Bootstrap Learning Curves cho thấy độ ổn định của Test Accuracy qua các kích thước tập Train khác nhau. Khoảng tin cậy (vùng bóng) rất hẹp khẳng định mô hình ổn định và không bị phụ thuộc vào phân chia dữ liệu ngẫu nhiên.*
+
+
 
 ### 6.5 Challenges & Future Work
  *Challenges & Solutions*:
 
-- Data Quality: Dữ liệu y tế được xác định có độ nhiễu cao (Pure Noise). Thay vì cố gắng tối ưu hóa chỉ số Accuracy một cách khiên cưỡng, tôi tập trung thiết lập Pipeline Architecture chuẩn mực, đảm bảo tính bền vững và khả năng kiểm soát dữ liệu đầu vào.
+- *Data Quality*: Dữ liệu y tế được xác định có độ nhiễu cao (Pure Noise). Thay vì cố gắng tối ưu hóa chỉ số Accuracy một cách khiên cưỡng, tôi tập trung thiết lập Pipeline Architecture chuẩn mực, đảm bảo tính bền vững và khả năng kiểm soát dữ liệu đầu vào.
 
-- Engineering Mindset: Xây dựng hệ thống theo hướng Module hóa (Modular) và Tái sử dụng (Reusable), giúp Pipeline có thể tích hợp ngay lập tức vào các dự án thực tế khi có nguồn dữ liệu chất lượng cao hơn.
+- *Engineering Mindset*: Xây dựng hệ thống theo hướng Module hóa (Modular) và Tái sử dụng (Reusable), giúp Pipeline có thể tích hợp ngay lập tức vào các dự án thực tế khi có nguồn dữ liệu chất lượng cao hơn.
 
 *Future Work*:
 
-- Scalability: Triển khai Pipeline lên hạ tầng Cloud (AWS/GCP) sử dụng Docker/Kubernetes.
+- *Scalability*: Triển khai Pipeline lên hạ tầng Cloud (AWS/GCP) sử dụng Docker/Kubernetes.
 
-- MLOps Integration: Tích hợp công cụ quản lý thí nghiệm (MLflow/W&B) để theo dõi phiên bản model và so sánh kết quả thực nghiệm khoa học.
+- *MLOps Integration*: Tích hợp công cụ quản lý thí nghiệm (MLflow/W&B) để theo dõi phiên bản model và so sánh kết quả thực nghiệm khoa học.
 
-- Advanced Modeling: Thử nghiệm các kiến trúc Deep Learning hoặc Tabular Transformers để khai thác sâu hơn các đặc trưng dữ liệu phức tạp.
+- *Advanced Modeling*: Thử nghiệm các kiến trúc Deep Learning hoặc Tabular Transformers để khai thác sâu hơn các đặc trưng dữ liệu phức tạp.
 
 ---
 
@@ -155,3 +174,11 @@ Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt 
 cd healthcare_prediction
 pip install -r requirements.txt
 ---
+```
+
+## 🏗️ 8. Production Readiness & Engineering Notes
+- *Đã hoàn thiện*: Logging hệ thống, transform() method cho inference, xử lý OOV categories, Unit tests (pytest) cho các module chính.
+
+- *Roadmap kỹ thuật*: Triển khai MLflow tracking, Dockerize pipeline, CI/CD với GitHub Actions, và tích hợp FastAPI cho serving.
+
+
