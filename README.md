@@ -4,14 +4,14 @@ Dataset gốc: [Healthcare Dataset (Kaggle)](https://www.kaggle.com/code/likhith
 ---
 
 ## 📋 Table of Contents
-1. 🤖 [Introduction](#-1-introduction)
-2. ⚙️ [Tech Stack](#-2-tech-stack)
-3. 📁 [Project Structure](#-3-project-structure)
-4. 📊 [Data Diagnosis & Hypothesis Testing](#-4-data-diagnosis--hypothesis-testing)
-5. 🧪 [Experimental Results: CASE 1 vs CASE 2](#-5-experimental-results-case-1-vs-case-2)
-6. 🚀 [Model Operational Architecture & Tuning](#-6-model-operational-architecture--tuning)
-7. 💻 [Usage Guide](#-7-usage-guide)
-8. 🏗️ [Production Readiness & Engineering Notes](#-8-production-readiness-vs-engineering-notes)
+1.  [Introduction](#-1-introduction)
+2.  [Tech Stack](#-2-tech-stack)
+3.  [Project Structure](#-3-project-structure)
+4.  [Data Diagnosis & Hypothesis Testing](#-4-data-diagnosis--hypothesis-testing)
+5.  [Experimental Results: CASE 1 vs CASE 2](#-5-experimental-results-case-1-vs-case-2)
+6.  [Model Operational Architecture & Tuning](#-6-model-operational-architecture--tuning)
+7.  [Usage Guide](#-7-usage-guide)
+8.  [Production Readiness & Engineering Notes](#-8-production-readiness-vs-engineering-notes)
 
 ---
 
@@ -84,7 +84,7 @@ Quét dữ liệu thô qua bộ lọc ``DataInspector`` thu được các phát 
 | *Random Forest* | *44.5% / 0.44* | *43.8% / 0.44* | -0.7% |
 | *Gradient Boosting* | 32.6% / 0.32 | 33.1% / 0.33 | +0.5% |
 
-🧐 **Insight:** Sự sụt giảm nhẹ của *Random Forest* sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
+ **Insight:** Sự sụt giảm nhẹ của *Random Forest* sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
 
 
 ---
@@ -102,7 +102,7 @@ Quét dữ liệu thô qua bộ lọc ``DataInspector`` thu được các phát 
 | *XGBoost* | 37.1% | 0.369 | Trung bình | Kiểm soát Loss qua Early Stopping |
 | *Random Forest* | *38.4%* | *0.381* | Cao | *Kháng nhiễu tốt nhất* |
 
-🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
+ **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
 
 <img width="620" height="172" alt="image" src="https://github.com/user-attachments/assets/9f78db36-989c-4e01-9d9e-4f48c8ea9a02" />
 
