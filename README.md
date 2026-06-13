@@ -183,6 +183,7 @@ cd healthcare_prediction
 pip install -r requirements.txt
 ---
 ```
+---
 
 ## 🏗️ 8. Production Readiness & Engineering Notes
 - *Đã hoàn thiện*: Logging hệ thống, transform() method cho inference, xử lý OOV categories, Unit tests (pytest) cho các module chính.
