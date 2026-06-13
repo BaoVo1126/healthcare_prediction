@@ -16,7 +16,7 @@ Dataset gốc: [Healthcare Dataset (Kaggle)](https://www.kaggle.com/code/likhith
 ---
 
 ## 🤖 1. Introduction
-Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) nhằm tự động hóa quy trình tiền xử lý dữ liệu, kiểm định giả thuyết thống kê, và huấn luyện/đánh giá hiệu năng của nhiều mô hình Machine Learning (Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM) trên bộ dữ liệu y tế gồm *55,500 hồ sơ bệnh án*. Xây dựng End-to-End Machine Learning Pipeline, tập trung vào việc chẩn đoán chất lượng dữ liệu chuyên sâu, phát hiện các điểm bất thường (outliers/anomalies) và xây dựng bộ công cụ (toolkit) tái sử dụng để tối ưu hóa quy trình từ xử lý dữ liệu đến huấn luyện mô hình.
+Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) nhằm tự động hóa quy trình tiền xử lý dữ liệu, kiểm định giả thuyết thống kê, và huấn luyện/đánh giá hiệu năng của nhiều mô hình Machine Learning (``Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM``) trên bộ dữ liệu y tế gồm *55,500 hồ sơ bệnh án*. Xây dựng *End-to-End Machine Learning Pipeline*, tập trung vào ``việc chẩn đoán chất lượng dữ liệu chuyên sâu, phát hiện các điểm bất thường (outliers/anomalies)`` và ``xây dựng bộ công cụ (toolkit) tái sử dụng để tối ưu hóa quy trình từ xử lý dữ liệu đến huấn luyện mô hình``.
 
 ---
 
@@ -60,7 +60,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 - *Xử lý đặc trưng*: Loại bỏ các biến hành chính nhiễu `(Name, Doctor, Hospital, Room Number)`. Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
 
-- *Bất thường dữ liệu*: Toán học Boxplot báo 0 dòng ngoại lai vì viện phí (Billing Amount) tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (Xử lý bằng clip(lower=0)) và 534 dòng trùng lặp tuyệt đối (Xử lý bằng drop_duplicates).
+- *Bất thường dữ liệu*: Toán học Boxplot báo 0 dòng ngoại lai vì ``Billing Amount`` tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (``Xử lý bằng clip(lower=0)``) và 534 dòng trùng lặp tuyệt đối (``Xử lý bằng drop_duplicates``).
 
 - *Tính mùa vụ*: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
 
@@ -70,7 +70,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
 
-``Hình 1``: Bằng chứng trực quan khẳng định Pure Noise. Bên trái: Toàn bộ p-value từ kiểm định Chi-square độc lập đều > 0.05 (đường nét đứt đỏ). Bên phải: Điểm Mutual Information xấp xỉ 0 trên mọi feature.
+*Hình 1: Bằng chứng trực quan khẳng định Pure Noise. Bên trái: Toàn bộ p-value từ kiểm định Chi-square độc lập đều > 0.05 (đường nét đứt đỏ). Bên phải: Điểm Mutual Information xấp xỉ 0 trên mọi feature.*
 
 
 ---
@@ -105,7 +105,7 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 <img width="620" height="172" alt="image" src="https://github.com/user-attachments/assets/9f78db36-989c-4e01-9d9e-4f48c8ea9a02" />
 
-``Hình 2``: So sánh hiệu năng Test Accuracy, F1-Macro và Validation Accuracy giữa Baseline và các mô hình Refined sau Feature Engineering. Random Forest cho thấy sự cải thiện mạnh nhất nhờ feature interactions.
+*Hình 2: So sánh hiệu năng Test Accuracy, F1-Macro và Validation Accuracy giữa Baseline và các mô hình Refined sau Feature Engineering. Random Forest cho thấy sự cải thiện mạnh nhất nhờ feature interactions.*
 
 ### 6.3. Tối ưu hóa (Advanced Optimization)
 * *Feature Engineering*: Thêm 6 biến chuyên ngành (Age_Group, Long_Stay, Cond_Med_Interact...) nâng hiệu năng Random Forest lên *43.7%* (+9.2% so với baseline).
@@ -122,13 +122,13 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 <img width="619" height="443" alt="image" src="https://github.com/user-attachments/assets/6e428a41-1768-4bcc-a5fd-75c6f7d1bf39" />
 
 
-``Hình 3``: Confusion Matrix của Random Forest (Best Model) trên tập Test. Mô hình không bị bias mạnh vào một class nào cụ thể (phân phối normalized recall khá đồng đều), củng cố thêm giả thuyết "đoán ngẫu nhiên" trên dữ liệu Pure Noise.
+*Hình 3: Confusion Matrix của Random Forest (Best Model) trên tập Test. Mô hình không bị bias mạnh vào một class nào cụ thể (phân phối normalized recall khá đồng đều), củng cố thêm giả thuyết "đoán ngẫu nhiên" trên dữ liệu Pure Noise.*
 
 
 <img width="617" height="221" alt="image" src="https://github.com/user-attachments/assets/0b2c75b6-0758-4afd-ae56-0ed5d5130c04" />
 
 
-``Hình 4``: Bootstrap Learning Curves cho thấy độ ổn định của Test Accuracy qua các kích thước tập Train khác nhau. Khoảng tin cậy (vùng bóng) rất hẹp khẳng định mô hình ổn định và không bị phụ thuộc vào phân chia dữ liệu ngẫu nhiên.
+*Hình 4: Bootstrap Learning Curves cho thấy độ ổn định của Test Accuracy qua các kích thước tập Train khác nhau. Khoảng tin cậy (vùng bóng) rất hẹp khẳng định mô hình ổn định và không bị phụ thuộc vào phân chia dữ liệu ngẫu nhiên.*
 
 
 
