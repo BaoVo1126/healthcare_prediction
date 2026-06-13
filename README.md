@@ -26,7 +26,7 @@ Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) n
 ---
 
 ## 📁 3. Cấu trúc thư mục (Project Structure)
-text
+```text
 healthcare_ml/
 │
 ├── data/                       # Thư mục quản lý dữ liệu
@@ -43,7 +43,7 @@ healthcare_ml/
     ├── visualizer.py           # Tự động hóa vẽ biểu đồ EDA
     ├── preprocessor.py         # Thực thi quy trình drop → clip → encode → scale
     └── model_trainer.py        # Bộ huấn luyện đa mô hình & Vẽ Bootstrap curves
-
+```
 ---
 
 ## 📊 4. Data Quality Diagnosis & Hypothesis Testing
@@ -71,8 +71,9 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 | *Decision Tree* | 33.1% / 0.32 | 33.1% / 0.32 | 0.0% |
 | *Random Forest* | *44.5% / 0.44* | *43.8% / 0.44* | -0.7% |
 | *Gradient Boosting* | 32.6% / 0.32 | 33.1% / 0.33 | +0.5% |
+
 🧐 **Insight:** Sự sụt giảm nhẹ của Random Forest sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
-.
+
 
 ---
 
