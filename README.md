@@ -130,7 +130,7 @@ Dự án được thiết kế hoàn toàn theo kiến trúc hướng đối tư
 ### 🛠️ 7.1. Sử dụng Pipeline Tiền xử lý dữ liệu tự động
 Đoạn mã mẫu minh họa cách gọi lớp AutoPreprocessor để tự động dọn dẹp dữ liệu ngoại lai, triệt tiêu biến nhiễu hành chính và cắt lát dữ liệu theo tỷ lệ nghiêm ngặt *80/10/10*:
 
-from src.preprocessor import AutoPreprocessor
+```from src.preprocessor import AutoPreprocessor
 import pandas as pd
 
 # 1. Nạp bộ dữ liệu y tế thô
@@ -146,11 +146,12 @@ prep = AutoPreprocessor(
 X_train, X_val, X_test, y_train, y_val, y_test = prep.fit_transform(df)
 
 print(f" Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.shape}")
+```
 ---
 
 ## 🛠️ 7.2 Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
 Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
-git clone [https://github.com/BaoVo1126/healthcare_prediction.git](https://github.com/BaoVo1126/healthcare_prediction.git)
+```git clone [https://github.com/BaoVo1126/healthcare_prediction.git](https://github.com/BaoVo1126/healthcare_prediction.git)
 cd healthcare_prediction
-pip install -r requirements.txt
+pip install -r requirements.txt```
 ---
