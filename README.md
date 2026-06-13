@@ -58,11 +58,11 @@ healthcare_ml/
 ## 📊 4. Data Quality Diagnosis & Hypothesis Testing
 Quét dữ liệu thô qua bộ lọc ``DataInspector`` thu được các phát hiện cốt lõi đặc trưng sau:
 
-- *Xử lý đặc trưng*: Loại bỏ các biến hành chính nhiễu `(Name, Doctor, Hospital, Room Number)`. Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
+- **Xử lý đặc trưng**: Loại bỏ các biến hành chính nhiễu `(Name, Doctor, Hospital, Room Number)`. Trích xuất đặc trưng lâm sàng: ``Length of Stay (Số ngày nằm viện)``.
 
-- *Bất thường dữ liệu*: Toán học Boxplot báo 0 dòng ngoại lai vì ``Billing Amount`` tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (``Xử lý bằng clip(lower=0)``) và 534 dòng trùng lặp tuyệt đối (``Xử lý bằng drop_duplicates``).
+- **Bất thường dữ liệu**: Toán học Boxplot báo 0 dòng ngoại lai vì ``Billing Amount`` tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (``Xử lý bằng clip(lower=0)``) và 534 dòng trùng lặp tuyệt đối (``Xử lý bằng drop_duplicates``).
 
-- *Tính mùa vụ*: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
+- **Tính mùa vụ**: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
 
 - **Kiểm định Chi-square ($\chi$<sub>2</sub>)**: Kiểm định tính độc lập giữa các biến categorical với nhãn mục tiêu `Test Results`. **Tất cả features trả về p-value > 0.05.**
 
