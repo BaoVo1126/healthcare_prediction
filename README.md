@@ -69,7 +69,8 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 🚨 *Insight*: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
-``Hình 1: Bằng chứng trực quan khẳng định Pure Noise. Bên trái: Toàn bộ p-value từ kiểm định Chi-square độc lập đều > 0.05 (đường nét đứt đỏ). Bên phải: Điểm Mutual Information xấp xỉ 0 trên mọi feature.``
+
+``Hình 1``: Bằng chứng trực quan khẳng định Pure Noise. Bên trái: Toàn bộ p-value từ kiểm định Chi-square độc lập đều > 0.05 (đường nét đứt đỏ). Bên phải: Điểm Mutual Information xấp xỉ 0 trên mọi feature.
 
 
 ---
@@ -102,11 +103,9 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 | *Random Forest* | *38.4%* | *0.381* | Cao | *Kháng nhiễu tốt nhất* |
 🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
 
-<div align="center">
-  <img src="plots/model_comparison_bar.png" width="90%" alt="Final Model Benchmarking Comparison" />
-</div>
+<img width="620" height="172" alt="image" src="https://github.com/user-attachments/assets/9f78db36-989c-4e01-9d9e-4f48c8ea9a02" />
 
-``Hình 2: So sánh hiệu năng Test Accuracy, F1-Macro và Validation Accuracy giữa Baseline và các mô hình Refined sau Feature Engineering. Random Forest cho thấy sự cải thiện mạnh nhất nhờ feature interactions.``
+``Hình 2``: So sánh hiệu năng Test Accuracy, F1-Macro và Validation Accuracy giữa Baseline và các mô hình Refined sau Feature Engineering. Random Forest cho thấy sự cải thiện mạnh nhất nhờ feature interactions.
 
 ### 6.3. Tối ưu hóa (Advanced Optimization)
 * *Feature Engineering*: Thêm 6 biến chuyên ngành (Age_Group, Long_Stay, Cond_Med_Interact...) nâng hiệu năng Random Forest lên *43.7%* (+9.2% so với baseline).
@@ -120,15 +119,16 @@ Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hi�
 
 - *Error Analysis*: Mô hình được đánh giá thông qua cả Accuracy và F1-Macro để đảm bảo tính bền vững trên cả các lớp dữ liệu mất cân bằng.
 
-<div align="center">
-  <img src="plots/best_model_confusion_matrix.png" width="45%" alt="Best Model Confusion Matrix (Random Forest)" />
+<img width="619" height="443" alt="image" src="https://github.com/user-attachments/assets/6e428a41-1768-4bcc-a5fd-75c6f7d1bf39" />
 
-``Hình 3: Confusion Matrix của Random Forest (Best Model) trên tập Test. Mô hình không bị bias mạnh vào một class nào cụ thể (phân phối normalized recall khá đồng đều), củng cố thêm giả thuyết "đoán ngẫu nhiên" trên dữ liệu Pure Noise.``
 
-<img src="plots/bootstrap_learning_curves.png" width="45%" alt="Bootstrap Learning Curves (Mean ± Std)" />
-</div>
+``Hình 3``: Confusion Matrix của Random Forest (Best Model) trên tập Test. Mô hình không bị bias mạnh vào một class nào cụ thể (phân phối normalized recall khá đồng đều), củng cố thêm giả thuyết "đoán ngẫu nhiên" trên dữ liệu Pure Noise.
 
-``Hình 4: Bootstrap Learning Curves cho thấy độ ổn định của Test Accuracy qua các kích thước tập Train khác nhau. Khoảng tin cậy (vùng bóng) rất hẹp khẳng định mô hình ổn định và không bị phụ thuộc vào phân chia dữ liệu ngẫu nhiên.``
+
+<img width="617" height="221" alt="image" src="https://github.com/user-attachments/assets/0b2c75b6-0758-4afd-ae56-0ed5d5130c04" />
+
+
+``Hình 4``: Bootstrap Learning Curves cho thấy độ ổn định của Test Accuracy qua các kích thước tập Train khác nhau. Khoảng tin cậy (vùng bóng) rất hẹp khẳng định mô hình ổn định và không bị phụ thuộc vào phân chia dữ liệu ngẫu nhiên.
 
 
 
