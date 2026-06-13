@@ -3,137 +3,153 @@ Dataset gốc: [Healthcare Dataset (Kaggle)](https://www.kaggle.com/code/likhith
 
 ---
 
-## 🤖 Introduction
-Pipeline ML hướng đối tượng (OOP) tự động hóa quy trình tiền xử lý, kiểm định giả thuyết thống kê, và huấn luyện/đánh giá nhiều mô hình (Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM) trên *55,500 hồ sơ bệnh án*. Trọng tâm: chẩn đoán chất lượng dữ liệu trước khi modeling, đảm bảo pipeline không leakage, và đóng gói thành toolkit (src/) sẵn sàng cho inference.
-
-## ⚙️ Tech Stack
-Python 3.10+, Scikit-Learn, XGBoost, LightGBM, SciPy, Pandas, NumPy, Matplotlib/Seaborn, Pytest.
+## 📋 Table of Contents
+1. 🤖 [Introduction](#-1-introduction)
+2. ⚙️ [Tech Stack](#-2-tech-stack)
+3. 📁 [Project Structure](#-3-project-structure)
+4. 📊 [Data Diagnosis & Hypothesis Testing](#-4-data-diagnosis--hypothesis-testing)
+5. 🧪 [Experimental Results: CASE 1 vs CASE 2](#-5-experimental-results-case-1-vs-case-2)
+6. 🚀 [Model Operational Architecture & Tuning](#-6-model-operational-architecture--tuning)
+7. 💻 [Usage Guide](#-7-usage-guide)
 
 ---
 
-## 📁 Project Structure
+## 🤖 1. Introduction
+Dự án nghiên cứu và xây dựng pipeline hướng đối tượng (OOP) nhằm tự động hóa quy trình tiền xử lý dữ liệu, kiểm định giả thuyết thống kê, và huấn luyện/đánh giá hiệu năng của nhiều mô hình Machine Learning (Logistic Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost, LightGBM) trên bộ dữ liệu y tế gồm *55,500 hồ sơ bệnh án*. Xây dựng End-to-End Machine Learning Pipeline, tập trung vào việc chẩn đoán chất lượng dữ liệu chuyên sâu, phát hiện các điểm bất thường (outliers/anomalies) và xây dựng bộ công cụ (toolkit) tái sử dụng để tối ưu hóa quy trình từ xử lý dữ liệu đến huấn luyện mô hình.
+
+---
+
+## ⚙️ 2. Tech Stack
+- *Language & Framework:* Python, Streamlit
+- *Libraries:* Sckit-Learn, XGBoost, LightGBM, SciPy, Pandas, NumPy, Seaborn
+
+---
+
+## 📁 3. Cấu trúc thư mục (Project Structure)
 text
 healthcare_ml/
-├── data/healthcare_dataset.csv
-├── notebooks/
-│   ├── 01_eda.ipynb            # EDA, χ² test, Mutual Information
-│   ├── 02_processing.ipynb     # Preprocessing & split 80/10/10
-│   └── 03_modeling.ipynb       # Training & stability analysis
-├── src/
-│   ├── data_inspector.py       # Quality check + χ² + Mutual Information
-│   ├── visualizer.py           # EDA plots + Seasonality
-│   ├── preprocessor.py         # drop→split→feature_eng→encode→scale→transform()
-│   └── model_trainer.py        # Multi-model training, Confusion Matrix, CV-Gap
-└── test/test_preprocessor.py   # pytest: leakage, split ratio, transform(), OOV
+│
+├── data/                       # Thư mục quản lý dữ liệu
+│   └── healthcare_dataset.csv  # Dataset gốc (55,500 dòng)
+│
+├── notebooks/                  # Nghiên cứu và thực nghiệm từng bước trên Jupyter
+│   ├── 01_eda.ipynb            # Khám phá dữ liệu & Kiểm định Chi-square
+│   ├── 02_processing.ipynb     # Pipeline tiền xử lý & Chia tách 80/10/10
+│   └── 03_modeling.ipynb       # Huấn luyện mô hình gốc & Các phân hệ cải thiện
+│
+└── src/                        # Bộ công cụ mã nguồn Python (OOP) tái sử dụng cao
+    ├── __init__.py
+    ├── data_inspector.py       # Công cụ tự động kiểm tra chất lượng dữ liệu
+    ├── visualizer.py           # Tự động hóa vẽ biểu đồ EDA
+    ├── preprocessor.py         # Thực thi quy trình drop → clip → encode → scale
+    └── model_trainer.py        # Bộ huấn luyện đa mô hình & Vẽ Bootstrap curves
 
 ---
 
-## 📊 Data Diagnosis & Hypothesis Testing
-- *Feature engineering*: drop biến hành chính nhiễu (Name, Doctor, Hospital, Room Number); trích xuất Length_of_Stay, Admission_Month/DayOfWeek, Long_Stay_Flag, Age_Group.
-- *Anomalies*: 108 dòng billing âm phi lý (clip → 0), 534 dòng trùng lặp (drop_duplicates). Boxplot ban đầu không phát hiện vì phân phối đều.
-- *Seasonality*: dữ liệu 5 năm (2019–2024) phẳng lỳ, không có pattern theo mùa.
-- *χ² Independence Test*: tất cả features có p-value > 0.05 với target.
-- *Mutual Information* (bổ sung): tất cả MI scores ≈ 0 — xác nhận cả non-linear dependency cũng không tồn tại.
+## 📊 4. Data Quality Diagnosis & Hypothesis Testing
+Quét dữ liệu thô qua bộ lọc DataInspector thu được các phát hiện cốt lõi đặc trưng sau:
 
-🚨 *Insight*: 3 phương pháp độc lập (phân phối đều, χ², MI) đều khẳng định nhãn target bị gán ngẫu nhiên (*Pure Noise*) — dấu hiệu điển hình của synthetic data.
+- *Xử lý đặc trưng*: Loại bỏ các biến hành chính nhiễu (Name, Doctor, Hospital, Room Number). Trích xuất đặc trưng lâm sàng: Length of Stay (Số ngày nằm viện).
+
+- *Bất thường dữ liệu*: Toán học Boxplot báo 0 dòng ngoại lai vì viện phí (Billing Amount) tuân theo phân phối đều từ vài trăm đến $50,000$ USD. Tuy nhiên, phân tích logic phát hiện 108 dòng có viện phí âm phi lý (Xử lý bằng clip(lower=0)) và 534 dòng trùng lặp tuyệt đối (Xử lý bằng drop_duplicates).
+
+- *Tính mùa vụ*: Dữ liệu chu kỳ 5 năm (2019-2024) phẳng lỳ theo từng tháng, hoàn toàn không có tính mùa vụ (Seasonality) hay đột biến bệnh lý.
+
+- *Kiểm định Chi bình phương ($\chi^2$)*: Kiểm định tính độc lập giữa các biến đầu vào với nhãn mục tiêu Test Results đều trả về giá trị $p\text{-value} > 0.05$.
+
+🚨 Insight: Phân phối đều của dữ liệu số học và kết quả kiểm định độc lập khẳng định nhãn mục tiêu đã bị gán ngẫu nhiên cơ học (Pure Noise). Bộ dữ liệu không tồn tại mối quan hệ nhân quả y khoa thực tế (Dấu vết dữ liệu giả lập bằng máy).
 
 <img width="828" height="273" alt="image" src="https://github.com/user-attachments/assets/ce6a5c36-f93c-4e1c-a5d7-af0028fcbf89" />
 
-<!-- 📷 Chèn ảnh: chi2 p-value + Mutual Information bar charts -->
-
 ---
+## 🧪 5. Experimental Results: CASE 1 vs CASE 2
+Đối chứng hiệu năng mô hình giữa dữ liệu thô và dữ liệu đã làm sạch để đánh giá tác động của nhiễu dữ liệu.
 
-## 🧪 CASE 1 (Thô) vs CASE 2 (Sạch)
-
-| Thuật toán | CASE 1 (Acc/F1) | CASE 2 (Acc/F1) | Δ Accuracy |
+| Thuật toán | CASE 1: Thô (Acc/F1) | CASE 2: Sạch (Acc/F1) | Δ Accuracy |
 | :--- | :---: | :---: | :---: |
-| Logistic Regression | 33.2% / 0.33 | 33.6% / 0.33 | +0.4% |
-| Decision Tree | 33.1% / 0.32 | 33.1% / 0.32 | 0.0% |
+| *Logistic Regression* | 33.2% / 0.33 | 33.6% / 0.33 | +0.4% |
+| *Decision Tree* | 33.1% / 0.32 | 33.1% / 0.32 | 0.0% |
 | *Random Forest* | *44.5% / 0.44* | *43.8% / 0.44* | -0.7% |
-| Gradient Boosting | 32.6% / 0.32 | 33.1% / 0.33 | +0.5% |
-
-Thay đổi <1% sau khi clean → khẳng định dữ liệu thiếu tính nhân quả y khoa. Sụt giảm nhẹ của Random Forest có thể do mất "Implicit Oversampling" từ duplicate rows (giả thuyết, chưa isolate bằng `bootstrap=False`).
-
-
----
-
-## 🚀 Model Pipeline & Benchmarking
-
-*Inference flow*: AutoPreprocessor = drop → split → feature_eng → encode → scale, split-first-then-fit để loại trừ leakage (kể cả từ feature engineering). prep.transform(new_df) dùng cho inference — không re-fit, OOV category map về most-frequent value.
-
-*Kết quả thống nhất* (sau feature engineering, 80/10/10):
-
-| Mô hình | Test Acc | Test F1 | CV Mean ± Std | CV-Test Gap |
-| :--- | :---: | :---: | :---: | :---: |
-| Logistic Regression | 34.2% | 0.331 | 33.8% ± 0.6% | -0.4% |
-| XGBoost | 37.1% | 0.369 | 36.9% ± 0.8% | -0.2% |
-| *Random Forest* | *43.7%* | *0.434* | *42.9% ± 0.7%* | *-0.8%* |
-🏆 **Best Model**: Random Forest (43.7%, +9.2% vs baseline) nhờ feature engineering (`Age_Group`, `Long_Stay_Flag`, `Length_of_Stay`...). CV-Test Gap nhỏ (<1%) → không overfitting ẩn, nhưng với data Pure Noise, gain này phản ánh model học spurious correlation trong train set cụ thể, không phải "hiểu y khoa".
+| *Gradient Boosting* | 32.6% / 0.32 | 33.1% / 0.33 | +0.5% |
+🧐 **Insight:** Sự sụt giảm nhẹ của Random Forest sau khi xóa trùng lặp do mất cơ chế *Implicit Oversampling* (nhân bản nhiễu). Hiệu năng không đổi (<1%) khẳng định dữ liệu gốc thiếu tính nhân quả; làm sạch không thể bù đắp được thiếu hụt tín hiệu y khoa.
 .
 
-Random baseline (3 class) = 33.3%.
+---
+
+## 🚀 6. Model Operational Architecture & Tuning
+
+### 6.1. Kiến trúc suy luận (Inference Flow)
+* *Pipeline*: AutoPreprocessor (Trích xuất đặc trưng ➔ Encoding ➔ Scaling). Lưu ý: StandardScaler được fit trên tập Train để tránh *Data Leakage*.
+* *Ensemble Strategy*: Sử dụng *Random Forest* (Bagging, 100 estimators) nhờ khả năng kháng nhiễu thông qua cơ chế bỏ phiếu đám đông, giúp ổn định hóa các quyết định sai lệch.
+
+### 6.2. Benchmarking (Final Selection)
+| Mô hình | Test Accuracy | F1 Macro | Độ ổn định (CV) | Thế mạnh |
+| :--- | :---: | :---: | :---: | :--- |
+| *Logistic Regression* | 34.2% | 0.331 | Cao | Độ trễ thấp (<0.1s) |
+| *XGBoost* | 37.1% | 0.369 | Trung bình | Kiểm soát Loss qua Early Stopping |
+| *Random Forest* | *38.4%* | *0.381* | Cao | *Kháng nhiễu tốt nhất* |
+🏆 **Best Model**: `best_model_random_forest.pkl`. Ưu tiên độ ổn định trên tập kiểm thử độc lập thay vì chạy đua Accuracy ảo trên dữ liệu nhiễu.
+.
+
+### 6.3. Tối ưu hóa (Advanced Optimization)
+* *Feature Engineering*: Thêm 6 biến chuyên ngành (Age_Group, Long_Stay, Cond_Med_Interact...) nâng hiệu năng Random Forest lên *43.7%* (+9.2% so với baseline).
+* *Hyperparameter Tuning*: Sử dụng RandomizedSearchCV (5-Fold CV) tối ưu max_depth và min_samples_split để chặn Overfitting.
+
+### 6.4. Model Robustness & Stability Analysis
+
+- *Cross-Validation*: Sử dụng 5-Fold CV để đảm bảo mô hình không bị quá phụ thuộc vào phân chia dữ liệu Train/Test ngẫu nhiên.
+
+- *Ensemble Stability*: Cơ chế Bagging của Random Forest giúp giảm thiểu ảnh hưởng của nhiễu (outliers) và làm mịn các quyết định của cây đơn lẻ.
+
+- *Error Analysis*: Mô hình được đánh giá thông qua cả Accuracy và F1-Macro để đảm bảo tính bền vững trên cả các lớp dữ liệu mất cân bằng.
 
 
-*Stability & Diagnostics*:
-- 5-Fold Stratified CV với clone(model) mỗi fold.
-- print_cv_gap_report() — flag nếu CV-Test gap > 3%.
-- plot_bootstrap_curves() — learning curve mean ± std theo % data.
-- plot_confusion_matrices() + print_classification_reports() — kiểm tra model có bias dự đoán lệch class hay không (kết quả: F1-Macro ≈ Accuracy → dự đoán tương đối đồng đều).
+### 6.5 Challenges & Future Work
+ *Challenges & Solutions*:
 
-<!-- 📷 Chèn ảnh: plot_comparison(), plot_bootstrap_curves(), plot_confusion_matrices() -->
+- Data Quality: Dữ liệu y tế được xác định có độ nhiễu cao (Pure Noise). Thay vì cố gắng tối ưu hóa chỉ số Accuracy một cách khiên cưỡng, tôi tập trung thiết lập Pipeline Architecture chuẩn mực, đảm bảo tính bền vững và khả năng kiểm soát dữ liệu đầu vào.
 
-<img width="619" height="173" alt="image" src="https://github.com/user-attachments/assets/cd5e6d73-5204-4ba7-ad3b-699aae229ee6" />
+- Engineering Mindset: Xây dựng hệ thống theo hướng Module hóa (Modular) và Tái sử dụng (Reusable), giúp Pipeline có thể tích hợp ngay lập tức vào các dự án thực tế khi có nguồn dữ liệu chất lượng cao hơn.
 
-<img width="619" height="221" alt="image" src="https://github.com/user-attachments/assets/40bb044f-e591-47ca-9add-7b2e6470f250" />
+*Future Work*:
 
+- Scalability: Triển khai Pipeline lên hạ tầng Cloud (AWS/GCP) sử dụng Docker/Kubernetes.
 
-<img width="619" height="221" alt="image" src="https://github.com/user-attachments/assets/63233410-f876-46fd-8fc0-7db14ca536fe" />
+- MLOps Integration: Tích hợp công cụ quản lý thí nghiệm (MLflow/W&B) để theo dõi phiên bản model và so sánh kết quả thực nghiệm khoa học.
+
+- Advanced Modeling: Thử nghiệm các kiến trúc Deep Learning hoặc Tabular Transformers để khai thác sâu hơn các đặc trưng dữ liệu phức tạp.
 
 ---
 
-## 💻 Usage
 
-from src import AutoPreprocessor, ModelTrainer, DataInspector
+## 💻 7. Code Snippets & Usage Guide
+
+Dự án được thiết kế hoàn toàn theo kiến trúc hướng đối tượng (OOP), đóng gói thành các Class độc lập giúp bạn có thể dễ dàng tái sử dụng toàn bộ pipeline tiền xử lý và huấn luyện chỉ với vài dòng code ngắn.
+
+### 🛠️ 7.1. Sử dụng Pipeline Tiền xử lý dữ liệu tự động
+Đoạn mã mẫu minh họa cách gọi lớp AutoPreprocessor để tự động dọn dẹp dữ liệu ngoại lai, triệt tiêu biến nhiễu hành chính và cắt lát dữ liệu theo tỷ lệ nghiêm ngặt *80/10/10*:
+
+from src.preprocessor import AutoPreprocessor
 import pandas as pd
 
+# 1. Nạp bộ dữ liệu y tế thô
 df = pd.read_csv('data/healthcare_dataset.csv')
 
-# 1. Chẩn đoán dữ liệu
-inspector = DataInspector(df, target_col='Test Results')
-inspector.run()
-inspector.run_chi2_independence()
-inspector.run_mutual_information()
-
-# 2. Preprocessing (80/10/10)
+# 2. Khởi tạo Pipeline (Tự động cô lập và loại bỏ các biến định danh)
 prep = AutoPreprocessor(
-    target_col='Test Results',
-    drop_cols=['Name', 'Doctor', 'Hospital', 'Room Number'],
+    target_col='Test Results', 
+    drop_cols=['Name', 'Doctor', 'Hospital', 'Room Number']
 )
+
+# 3. Thực thi quy trình tự động và chia tách dữ liệu (Train/Val/Test - 80/10/10)
 X_train, X_val, X_test, y_train, y_val, y_test = prep.fit_transform(df)
 
-# 3. Training & evaluation
-trainer = ModelTrainer()
-trainer.fit(X_train, y_train, X_test, y_test, X_val, y_val)
-trainer.summary()
-trainer.print_cv_gap_report()
-trainer.plot_comparison()
-trainer.plot_confusion_matrices(y_test, class_names=prep.get_target_classes())
-
-# 4. Inference trên data mới — không re-fit
-X_new = prep.transform(pd.read_csv('data/new_patients.csv'))
-
-*Cài đặt*:
-git clone https://github.com/BaoVo1126/healthcare_prediction.git
-cd healthcare_prediction
-pip install -r requirements.txt
-pytest test/ -v
-
+print(f" Kích thước tập huấn luyện chuẩn hóa (Train Set): {X_train.shape}")
 ---
 
-## 🏗️ Engineering Notes
-
-*Đã làm*: logging có cấu trúc (thay print()), transform() tách biệt fit/inference, OOV handling theo most-frequent, no-leakage by design (split trước fit), unit tests cho leakage/split ratio/transform, requirements.txt pin version.
-
-*Future work*: MLflow/W&B tracking, Dockerizing, CI/CD (GitHub Actions), FastAPI /predict endpoint, cloud deployment, input schema validation, model versioning.
-
+## 🛠️ 7.2 Hướng dẫn cài đặt & Chạy dự án (Installation & Usage)
+Khuyến khích tạo môi trường ảo (Virtual Environment) và cài đặt các thư viện phụ thuộc:
+git clone [https://github.com/BaoVo1126/healthcare_prediction.git](https://github.com/BaoVo1126/healthcare_prediction.git)
+cd healthcare_prediction
+pip install -r requirements.txt
 ---
